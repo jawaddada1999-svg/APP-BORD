@@ -17,12 +17,12 @@
     --navy-soft: #375380;
     --blue: #2563EB;
     --blue-light: #DBEAFE;
-    --bg: #FFFFFF;
+    --bg: #F5F7FB;
     --gray: #6B7A99;
     --border: #E6EAF2;
   }
   html, body { background: var(--bg); }
-  body { font-family: 'Tajawal', sans-serif; color: var(--navy); direction: rtl; text-align: right; }
+  body { font-family: 'Tajawal', sans-serif; color: var(--navy); }
   ::-webkit-scrollbar { width: 8px; height:8px; }
   ::-webkit-scrollbar-thumb { background: #C9D3E3; border-radius: 8px; }
 
@@ -42,20 +42,16 @@
 
   .icon-circle { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
 
-  .chip { transition: all .15s ease; white-space:nowrap; cursor: pointer; }
-  .chip.active-time { background: #EFF6FF !important; border-color: #3B82F6 !important; color:#1D4ED8 !important; font-weight: 700; }
-  .chip.active-status { background: #E0F2FE !important; border-color: #0EA5E9 !important; color:#0369A1 !important; font-weight: 700; }
-
+  .chip { transition: all .15s ease; white-space:nowrap; }
   .scroller { overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
   .scroller::-webkit-scrollbar { display:none; }
 
-  .tab-pill { transition: all .2s ease; cursor: pointer; }
+  .tab-pill { transition: all .2s ease; }
   .tab-pill.active { background: var(--navy); color:#fff; box-shadow: 0 6px 16px -6px rgba(15,30,61,0.35); }
   .tab-pill:not(.active) { background:#fff; color:var(--navy); border:1px solid var(--border); }
 
-  table thead th { position: sticky; top:0; background:#F8FAFC; z-index:5; color: var(--navy-soft); }
-  tbody tr:hover { background: #F8FAFC; }
-  tbody tr { border-color: #F1F5F9; }
+  table thead th { position: sticky; top:0; background:#FAFBFF; z-index:5; color: var(--navy-soft); }
+  tbody tr:hover { background: #F7F9FF; }
 
   .skeleton { background: linear-gradient(90deg, #EEF1F8 25%, #F8FAFF 37%, #EEF1F8 63%); background-size:400% 100%; animation: shimmer 1.4s ease infinite; }
   @keyframes shimmer { 0%{background-position:100% 50%;} 100%{background-position:0 50%;} }
@@ -66,9 +62,9 @@
 </style>
 </head>
 
-<body class="min-h-screen pb-16">
+<body class="min-h-screen">
 
-<div class="max-w-2xl mx-auto px-4 sm:px-6">
+<div class="max-w-2xl mx-auto px-4 sm:px-6 pb-16">
 
   <!-- ===================== الشريط العلوي ===================== -->
   <header class="pt-6 pb-5">
@@ -102,12 +98,12 @@
   <!-- ===================== فلتر الفترة الزمنية ===================== -->
   <section class="scroller flex gap-2 mb-3 pb-1" id="timeChips"></section>
 
-  <!-- ===================== بحث + فلاتر التصنيف والحالة ===================== -->
+  <!-- ===================== بحث + فلاتر التصنيف ===================== -->
   <section class="card rounded-2xl p-4 mb-5">
     <div class="relative mb-3">
-      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-sm" style="color:#9AA6BF"></i>
+      <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-sm" style="color:#9AA6BF"></i>
       <input id="searchInput" type="text" placeholder="بحث بالاسم أو الهاتف..."
-        class="w-full bg-[#F5F7FB] border border-[var(--border)] rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition" style="color:var(--navy)">
+        class="w-full bg-[#F5F7FB] border border-[var(--border)] rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition" style="color:var(--navy)">
     </div>
     <div class="scroller flex gap-2 pb-1" id="statusChips"></div>
   </section>
@@ -128,11 +124,11 @@
   <!-- ===================== بطاقة إجمالي العملاء ===================== -->
   <section id="totalCard" class="card-elevated rounded-2xl p-5 mb-3 hidden fade-in" style="background: linear-gradient(135deg,#EFF6FF,#FFFFFF)">
     <div class="flex items-center justify-between">
+      <div class="icon-circle bg-white shadow-sm" style="width:56px;height:56px;font-size:24px">👥</div>
       <div class="text-right">
         <p class="text-xs mb-1 font-semibold" style="color:var(--gray)">مجموع العملاء</p>
         <p class="text-4xl font-black" id="totalCount" style="color:var(--navy)">0</p>
       </div>
-      <div class="icon-circle bg-white shadow-sm" style="width:56px;height:56px;font-size:24px">👥</div>
     </div>
   </section>
 
@@ -141,44 +137,44 @@
 
   <!-- ===================== الرسوم البيانية الدائرية ===================== -->
   <section id="chartsWrap" class="space-y-4 mb-5 hidden">
-    <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3 text-slate-700">تفصيل التصنيف</h3>
-      <div class="h-56"><canvas id="chartClassification"></canvas></div>
-      <div id="legendClassification" class="mt-3 space-y-1.5 text-xs"></div>
+    <div class="card rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-fire text-xs" style="color:var(--blue)"></i>تفصيل التصنيف</h3>
+      <div class="h-64"><canvas id="chartClassification"></canvas></div>
+      <div id="legendClassification" class="mt-4 space-y-2.5"></div>
     </div>
-    <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3 text-slate-700">طريقة الدفع</h3>
-      <div class="h-56"><canvas id="chartPayment"></canvas></div>
-      <div id="legendPayment" class="mt-3 space-y-1.5 text-xs"></div>
+    <div class="card rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-sack-dollar text-xs" style="color:var(--blue)"></i>طريقة الدفع</h3>
+      <div class="h-64"><canvas id="chartPayment"></canvas></div>
+      <div id="legendPayment" class="mt-4 space-y-2.5"></div>
     </div>
-    <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3 text-slate-700">نوع العقار</h3>
-      <div class="h-56"><canvas id="chartPropertyType"></canvas></div>
-      <div id="legendPropertyType" class="mt-3 space-y-1.5 text-xs"></div>
+    <div class="card rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-house text-xs" style="color:var(--blue)"></i>نوع العقار</h3>
+      <div class="h-64"><canvas id="chartPropertyType"></canvas></div>
+      <div id="legendPropertyType" class="mt-4 space-y-2.5"></div>
     </div>
-    <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3 text-slate-700">توزيع الحالات</h3>
-      <div class="h-56"><canvas id="chartStatus"></canvas></div>
-      <div id="legendStatus" class="mt-3 space-y-1.5 text-xs"></div>
+    <div class="card rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-chart-simple text-xs" style="color:var(--blue)"></i>توزيع الحالات</h3>
+      <div class="h-64"><canvas id="chartStatus"></canvas></div>
+      <div id="legendStatus" class="mt-4 space-y-2.5"></div>
     </div>
   </section>
 
   <!-- ===================== حالة فارغة ===================== -->
-  <div id="emptyState" class="hidden flex-col items-center justify-center py-12 text-center text-slate-400 card rounded-2xl mb-5">
-    <div class="text-3xl mb-2">🗂️</div>
-    <p class="text-sm font-medium" id="emptyStateText">لا توجد بيانات مطابقة</p>
+  <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center card rounded-2xl mb-5" style="color:var(--gray)">
+    <div class="text-4xl mb-3">🗂️</div>
+    <p class="text-sm font-semibold" id="emptyStateText">لا توجد بيانات مطابقة</p>
   </div>
 
-  <!-- ===================== جدول العملاء ===================== -->
+  <!-- ===================== جدول نظرة عامة على العملاء ===================== -->
   <section id="tableWrap" class="card rounded-2xl overflow-hidden mb-5 hidden">
-    <div class="px-5 pt-4 pb-3 border-b border-[var(--border)]">
-      <h3 class="text-sm font-bold text-slate-700">قائمة العملاء</h3>
+    <div class="px-5 pt-5 pb-3">
+      <h3 class="text-sm font-bold" style="color:var(--navy)">نظرة عامة على العملاء</h3>
     </div>
-    <div class="overflow-x-auto max-h-[440px]">
+    <div class="overflow-x-auto max-h-[480px]">
       <table class="w-full text-xs">
         <thead>
-          <tr class="border-b border-slate-100 text-slate-500">
-            <th class="text-right px-4 py-3 font-bold">الاسم</th>
+          <tr class="text-[10px] border-b" style="border-color:var(--border)">
+            <th class="text-right px-4 py-3 font-bold">العميل</th>
             <th class="text-right px-4 py-3 font-bold">الهاتف</th>
             <th class="text-right px-4 py-3 font-bold">الميزانية</th>
             <th class="text-right px-4 py-3 font-bold">النوع</th>
@@ -186,87 +182,106 @@
             <th class="text-right px-4 py-3 font-bold">التصنيف</th>
           </tr>
         </thead>
-        <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
+        <tbody id="tableBody" class="divide-y" style="border-color:var(--border)"></tbody>
       </table>
     </div>
   </section>
 
   <!-- ===================== التقرير الشهري المفصل ===================== -->
   <section class="card rounded-2xl overflow-hidden mb-5">
-    <div class="px-5 pt-4 pb-3 border-b border-[var(--border)] flex items-center gap-2">
-      <span>📊</span>
-      <h3 class="text-sm font-bold text-slate-700">التقرير الشهري المفصل</h3>
+    <div class="px-5 pt-5 pb-3 flex items-center gap-2">
+      <i class="fa-solid fa-chart-column text-xs" style="color:var(--blue)"></i>
+      <h3 class="text-sm font-bold" style="color:var(--navy)">التقرير الشهري المفصل</h3>
     </div>
     <table class="w-full text-xs">
       <thead>
-        <tr class="border-b border-slate-100 text-slate-500">
-          <th class="text-right px-4 py-3 font-bold">المؤشر / الفئة</th>
-          <th class="text-left px-4 py-3 font-bold">العدد الحالي</th>
+        <tr class="text-[10px] border-b" style="border-color:var(--border); color:var(--navy-soft)">
+          <th class="text-right px-5 py-2.5 font-bold">المؤشر / الفئة</th>
+          <th class="text-right px-5 py-2.5 font-bold">العدد الحالي</th>
         </tr>
       </thead>
-      <tbody id="reportBody" class="divide-y divide-slate-100"></tbody>
+      <tbody id="reportBody" class="divide-y" style="border-color:var(--border)"></tbody>
     </table>
   </section>
 
-  <footer class="text-center text-xs text-slate-400 pt-2">
-    لوحة تحكم العقارات — مصممة خصيصاً لك
+  <footer class="text-center text-[11px] pt-2" style="color:#9AA6BF">
+    لوحة تحكم العقارات — البيانات متزامنة مع Google Sheets
   </footer>
 
 </div>
 
 <script>
 /* ============================================================
-   🔗 رابط الـ Web App الخاص بك (المحدث)
+   ⚙️ رابط الـ Web App
    ============================================================ */
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzfbGaJXGdctZDaRWLqWwZjXoNpRhLmUenSABML-SngK6UP3e_J8ECQIopafxemsAA2/exec';
 
+/* ============================================================
+   الترجمات
+   ============================================================ */
 const I18N = {
-  ar: { dir:'rtl', search:'بحث بالاسم أو الهاتف...', apart:'الشقق', villa:'الفيلات', local:'المحلات التجارية', vip:'VIP عملاء', warm:'WARM عملاء', cold:'COLD عملاء', empty:'لا توجد بيانات مطابقة' },
-  fr: { dir:'ltr', search:'Rechercher nom ou téléphone...', apart:'Appartements', villa:'Villas', local:'Locaux commerciaux', vip:'VIP', warm:'WARM', cold:'COLD', empty:'Aucune donnée' },
-  en: { dir:'ltr', search:'Search name or phone...', apart:'Apartments', villa:'Villas', local:'Commercial units', vip:'VIP', warm:'WARM', cold:'COLD', empty:'No data' }
+  ar: { dir:'rtl', search:'بحث بالاسم أو الهاتف...',
+        total:'مجموع العملاء', apart:'الشقق', villa:'الفيلات', local:'المحلات التجارية',
+        vip:'VIP عملاء', warm:'WARM عملاء', cold:'COLD عملاء', empty:'لا توجد بيانات مطابقة',
+        err:'تعذر تحميل البيانات من الشيت. تأكد من أن الرابط منشور بشكل صحيح.' },
+  fr: { dir:'ltr', search:'Rechercher nom ou téléphone...',
+        total:'Total clients', apart:'Appartements', villa:'Villas', local:'Locaux commerciaux',
+        vip:'Clients VIP', warm:'Clients WARM', cold:'Clients COLD', empty:'Aucune donnée trouvée',
+        err:"Échec du chargement. Vérifiez que le lien est bien publié." },
+  en: { dir:'ltr', search:'Search name or phone...',
+        total:'Total clients', apart:'Apartments', villa:'Villas', local:'Commercial units',
+        vip:'VIP clients', warm:'WARM clients', cold:'COLD clients', empty:'No matching data',
+        err:'Failed to load data. Make sure the link is properly published.' }
 };
 let LANG = 'ar';
 
+/* ============================================================
+   خرائط الألوان
+   ============================================================ */
 const STATUS_MAP = {
-  'nouveau':  { label:'Nouveau', emoji:'🆕', classes:'bg-blue-50 text-blue-700 border-blue-200' },
-  'en cours': { label:'En cours', emoji:'⏳', classes:'bg-amber-50 text-amber-700 border-amber-200' },
-  'vendu':    { label:'Vendu', emoji:'✅', classes:'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  'perdu':    { label:'Perdu', emoji:'❌', classes:'bg-red-50 text-red-700 border-red-200' },
-  'default':  { label:'—', emoji:'❔', classes:'bg-slate-50 text-slate-500 border-slate-200' }
+  'nouveau':  { label:'Nouveau', emoji:'🆕', color:'#2563EB', bg:'#EFF6FF', classes:'bg-blue-50 text-blue-700 border-blue-200' },
+  'en cours': { label:'En cours', emoji:'⏳', color:'#F59E0B', bg:'#FFFBEB', classes:'bg-amber-50 text-amber-700 border-amber-200' },
+  'vendu':    { label:'Vendu', emoji:'✅', color:'#10B981', bg:'#ECFDF5', classes:'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  'perdu':    { label:'Perdu', emoji:'❌', color:'#EF4444', bg:'#FEF2F2', classes:'bg-red-50 text-red-700 border-red-200' },
+  'default':  { label:'—', emoji:'❔', color:'#94A3B8', bg:'#F8FAFC', classes:'bg-slate-50 text-slate-500 border-slate-200' }
 };
 const CLASS_MAP = {
-  'vip':  { label:'VIP', emoji:'🔥', color:'#F59E0B', classes:'bg-orange-50 text-orange-700 border-orange-200' },
-  'warm': { label:'WARM', emoji:'🪵', color:'#3B82F6', classes:'bg-blue-50 text-blue-600 border-blue-200' },
-  'cold': { label:'COLD', emoji:'❄️', color:'#0EA5E9', classes:'bg-sky-50 text-sky-700 border-sky-200' },
-  'default': { label:'—', emoji:'—', color:'#CBD5E1', classes:'bg-slate-50 text-slate-500 border-slate-200' }
+  'vip':  { label:'VIP', emoji:'🔥', color:'#F59E0B', bg:'#FFF7ED', classes:'bg-orange-50 text-orange-700 border-orange-200' },
+  'warm': { label:'WARM', emoji:'🪵', color:'#3B82F6', bg:'#EFF6FF', classes:'bg-blue-50 text-blue-600 border-blue-200' },
+  'cold': { label:'COLD', emoji:'❄️', color:'#0EA5E9', bg:'#F0F9FF', classes:'bg-sky-50 text-sky-700 border-sky-200' },
+  'default': { label:'—', emoji:'—', color:'#94A3B8', bg:'#F8FAFC', classes:'bg-slate-50 text-slate-500 border-slate-200' }
 };
 const PROP_MAP = {
-  'appartement': { label:'شقة', emoji:'🏢', color:'#3B82F6' },
-  'villa': { label:'فيلا', emoji:'🏰', color:'#1D4ED8' },
+  'appartement': { label:'شقة', emoji:'🏢', color:'#2563EB' },
+  'villa': { label:'فيلا', emoji:'🏰', color:'#7C3AED' },
   'local comercial': { label:'محل تجاري', emoji:'🏪', color:'#EC4899' },
   'local commercial': { label:'محل تجاري', emoji:'🏪', color:'#EC4899' },
   'terrain': { label:'أرض', emoji:'📍', color:'#0EA5E9' },
-  'default': { label:'غير محدد', emoji:'🏠', color:'#CBD5E1' }
+  'default': { label:'غير محدد', emoji:'🏠', color:'#94A3B8' }
 };
 const PAY_MAP = {
-  'cash': { label:'Cash', color:'#3B82F6' },
+  'cash': { label:'Cash', color:'#2563EB' },
   'credit': { label:'Crédit', color:'#93C5FD' },
-  'default': { label:'—', color:'#CBD5E1' }
+  'default': { label:'—', color:'#94A3B8' }
 };
 
 const TIME_KEYS = ['all','today','yesterday','last_week','last_month'];
 const TIME_LABELS = {
-  ar:{all:'الكل',today:'اليوم',yesterday:'أمس',last_week:'الأسبوع',last_month:'الشهر'},
-  fr:{all:'Tout',today:"Aujourd'hui",yesterday:'Hier',last_week:'Semaine',last_month:'Mois'},
-  en:{all:'All',today:'Today',yesterday:'Yesterday',last_week:'Week',last_month:'Month'}
+  ar:{all:'الكل',today:'اليوم',yesterday:'أمس',last_week:'الأسبوع الماضي',last_month:'الشهر الماضي'},
+  fr:{all:'Tout',today:"Aujourd'hui",yesterday:'Hier',last_week:'Semaine dernière',last_month:'Mois dernier'},
+  en:{all:'All',today:'Today',yesterday:'Yesterday',last_week:'Last week',last_month:'Last month'}
 };
 const STATUS_KEYS = ['all','vip','warm','cold','nouveau','en cours','vendu','perdu'];
 
 let ALL_DATA = [];
 let ACTIVE_TIME = 'all';
 let ACTIVE_STATUS = 'all';
+let ACTIVE_VIEW = 'dashboard';
 let charts = {};
 
+/* ============================================================
+   أدوات مساعدة
+   ============================================================ */
 function norm(s){ return (s||'').toString().toLowerCase().trim(); }
 function styleFor(map, v){ return map[norm(v)] || map['default']; }
 
@@ -278,7 +293,6 @@ function parseDMY(str){
   if(!d||!m||!y) return null;
   return new Date(y,m-1,d);
 }
-
 function isInTimeRange(dateStr, range){
   if(range==='all') return true;
   const d = parseDMY(dateStr);
@@ -294,12 +308,22 @@ function isInTimeRange(dateStr, range){
 
 function badge(label, emoji, classes){
   if(!label) return '<span class="text-slate-400">—</span>';
-  return `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${classes}">${emoji||''} ${label}</span>`;
+  return `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border ${classes}">${emoji||''} ${label}</span>`;
 }
 
+function initialsOf(name){
+  if(!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  return (parts[0]?.[0]||'') + (parts[1]?.[0]||'');
+}
+
+/* ============================================================
+   عرض الفلاتر
+   ============================================================ */
 function renderTimeChips(){
   document.getElementById('timeChips').innerHTML = TIME_KEYS.map(k=>`
-    <button data-time="${k}" class="chip ${k===ACTIVE_TIME?'active-time':'bg-white text-slate-600 border-slate-200'} border rounded-xl px-3.5 py-2 text-xs font-semibold">
+    <button data-time="${k}" class="chip ${k===ACTIVE_TIME? 'text-white' : 'bg-white border'} rounded-full px-4 py-2 text-xs font-bold"
+      style="${k===ACTIVE_TIME ? 'background:var(--navy)' : 'border-color:var(--border); color:var(--navy-soft)'}">
       ${TIME_LABELS[LANG][k]}
     </button>`).join('');
   document.querySelectorAll('#timeChips button').forEach(b=>{
@@ -309,17 +333,29 @@ function renderTimeChips(){
 
 function renderStatusChips(){
   document.getElementById('statusChips').innerHTML = STATUS_KEYS.map(k=>{
-    let label = k==='all' ? (LANG==='ar'?'الكل':'All') : (CLASS_MAP[k]?.label || STATUS_MAP[k]?.label || k);
-    let emoji = CLASS_MAP[k]?.emoji || STATUS_MAP[k]?.emoji || '🔎';
-    return `<button data-status="${k}" class="chip ${k===ACTIVE_STATUS?'active-status':'bg-white text-slate-600 border-slate-200'} border rounded-xl px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5">
-      ${emoji} ${label}</button>`;
+    if (k==='all') {
+      const label = LANG==='ar'?'الكل':(LANG==='fr'?'Tout':'All');
+      const active = ACTIVE_STATUS==='all';
+      return `<button data-status="all" class="chip rounded-full px-3.5 py-2 text-[11px] font-bold border flex items-center gap-1.5"
+        style="${active ? 'background:var(--blue-light);border-color:var(--blue);color:var(--blue)' : 'background:#fff;border-color:var(--border);color:var(--navy-soft)'}">
+        <i class="fa-solid fa-layer-group text-[10px]"></i>${label}</button>`;
+    }
+    const meta = CLASS_MAP[k] || STATUS_MAP[k];
+    const active = k===ACTIVE_STATUS;
+    return `<button data-status="${k}" class="chip rounded-full px-3.5 py-2 text-[11px] font-bold border flex items-center gap-1.5"
+      style="${active ? `background:${meta.bg};border-color:${meta.color};color:${meta.color}` : 'background:#fff;border-color:var(--border);color:var(--navy-soft)'}">
+      ${meta.emoji} ${meta.label}</button>`;
   }).join('');
   document.querySelectorAll('#statusChips button').forEach(b=>{
     b.addEventListener('click', ()=>{ ACTIVE_STATUS=b.dataset.status; renderStatusChips(); applyFilters(); });
   });
 }
 
+/* ============================================================
+   الإحصائيات (شبكة بطاقات)
+   ============================================================ */
 function renderStats(data){
+  const dict = I18N[LANG];
   document.getElementById('totalCount').textContent = data.length;
   document.getElementById('totalCard').classList.remove('hidden');
 
@@ -332,48 +368,49 @@ function renderStats(data){
     cold: data.filter(d=>norm(d.classification)==='cold').length,
   };
 
-  const items = [
-    { label: I18N[LANG].apart, emoji:'🏢', value: counts.apart, bg:'bg-blue-50 text-blue-600' },
-    { label: I18N[LANG].villa, emoji:'🏰', value: counts.villa, bg:'bg-indigo-50 text-indigo-600' },
-    { label: I18N[LANG].local, emoji:'🏪', value: counts.local, bg:'bg-pink-50 text-pink-600' },
-    { label: I18N[LANG].vip,   emoji:'🔥', value: counts.vip,   bg:'bg-amber-50 text-amber-600' },
-    { label: I18N[LANG].warm,  emoji:'🪵', value: counts.warm,  bg:'bg-sky-50 text-sky-600' },
-    { label: I18N[LANG].cold,  emoji:'❄️', value: counts.cold,  bg:'bg-slate-100 text-slate-600' },
+  const cards = [
+    { label: dict.apart, emoji:'🏢', value: counts.apart, bg:'#EFF6FF' },
+    { label: dict.villa, emoji:'🏰', value: counts.villa, bg:'#F5F3FF' },
+    { label: dict.local, emoji:'🏪', value: counts.local, bg:'#FDF2F8' },
+    { label: dict.vip,   emoji:'🔥', value: counts.vip,   bg:'#FFF7ED' },
+    { label: dict.warm,  emoji:'🪵', value: counts.warm,  bg:'#EFF6FF' },
+    { label: dict.cold,  emoji:'❄️', value: counts.cold,  bg:'#F0F9FF' },
   ];
 
   const grid = document.getElementById('statsGrid');
   grid.classList.remove('hidden');
-  grid.innerHTML = items.map(i=>`
-    <div class="card rounded-2xl p-4 flex items-center justify-between">
+  grid.innerHTML = cards.map(c=>`
+    <div class="card rounded-2xl p-4 flex items-center justify-between fade-in">
+      <div class="icon-circle" style="background:${c.bg}">${c.emoji}</div>
       <div class="text-right">
-        <p class="text-[11px] mb-1 text-slate-500 font-medium">${i.label}</p>
-        <p class="text-xl font-black text-slate-800">${i.value}</p>
+        <p class="text-[11px] font-semibold mb-0.5" style="color:var(--gray)">${c.label}</p>
+        <p class="text-2xl font-black" style="color:var(--navy)">${c.value}</p>
       </div>
-      <div class="icon-circle ${i.bg}">${i.emoji}</div>
     </div>`).join('');
 }
 
+/* ============================================================
+   الرسوم البيانية
+   ============================================================ */
 function buildDonut(canvasId, labels, values, colors){
   const ctx = document.getElementById(canvasId);
   if(!ctx) return;
   if(charts[canvasId]) charts[canvasId].destroy();
+
   const total = values.reduce((a,b)=>a+b,0) || 1;
 
   charts[canvasId] = new Chart(ctx, {
     type:'doughnut',
-    data:{ labels, datasets:[{ data:values, backgroundColor:colors, borderWidth:2, borderColor:'#FFFFFF' }] },
+    data:{ labels, datasets:[{ data:values, backgroundColor:colors, borderColor:'#FFFFFF', borderWidth:3, hoverOffset:8 }] },
     plugins: [ChartDataLabels],
     options:{
-      responsive:true, maintainAspectRatio:false, cutout:'60%',
+      responsive:true, maintainAspectRatio:false, cutout:'58%',
       plugins:{
         legend:{ display:false },
-        tooltip:{
-          callbacks:{ label: ctx => `${ctx.label}: ${ctx.raw} (${Math.round((ctx.raw/total)*100)}%)` }
-        },
-        datalabels:{
-          color:'#FFFFFF', font:{ family:'Tajawal', weight:'bold', size:11 },
-          formatter: val => (Math.round((val/total)*100) > 0 ? Math.round((val/total)*100) + '%' : '')
-        }
+        tooltip:{ rtl: LANG==='ar', bodyFont:{family:'Tajawal'}, titleFont:{family:'Tajawal'},
+          callbacks:{ label: c => c.label + ': ' + c.raw + ' (' + Math.round((c.raw/total)*100) + '%)' } },
+        datalabels:{ color:'#fff', font:{family:'Tajawal', weight:'bold', size:12},
+          formatter: v => { const p = Math.round((v/total)*100); return p>0 ? p+'%':''; } }
       }
     }
   });
@@ -381,80 +418,106 @@ function buildDonut(canvasId, labels, values, colors){
 
 function renderLegend(containerId, entries){
   const total = entries.reduce((s,e)=>s+e.value,0) || 1;
-  document.getElementById(containerId).innerHTML = entries.map(e=>`
-    <div class="flex items-center justify-between">
-      <span class="text-slate-500">${Math.round((e.value/total)*100)}% (${e.value})</span>
-      <span class="flex items-center gap-1.5 font-medium text-slate-700">${e.label} <span class="w-2.5 h-2.5 rounded-full" style="background:${e.color}"></span></span>
-    </div>`).join('');
+  document.getElementById(containerId).innerHTML = entries.map(e=>{
+    const pct = Math.round((e.value/total)*100);
+    return `<div class="flex items-center justify-between text-xs">
+      <span style="color:var(--gray)">(${pct}%) ${e.value}</span>
+      <span class="flex items-center gap-2 font-medium" style="color:var(--navy)">${e.label} <span class="w-2.5 h-2.5 rounded-full" style="background:${e.color}"></span></span>
+    </div>`;
+  }).join('');
 }
 
 function renderCharts(data){
   document.getElementById('chartsWrap').classList.remove('hidden');
 
-  const getCounts = (field, map) => {
-    const counts = {};
-    data.forEach(d=>{ const k=norm(d[field])||'default'; counts[k]=(counts[k]||0)+1; });
-    let entries = Object.keys(counts).map(k=>({ key:k, value:counts[k], label:(map[k]||map.default).label, color:(map[k]||map.default).color }));
-    if(!entries.length) entries = [{ value:1, label:'لا توجد بيانات', color:'#E2E8F0' }];
-    return entries;
-  };
+  const clsCounts = {};
+  data.forEach(d=>{ const k=norm(d.classification)||'default'; clsCounts[k]=(clsCounts[k]||0)+1; });
+  let clsEntries = Object.keys(clsCounts).map(k=>({ value:clsCounts[k], label:(CLASS_MAP[k]||CLASS_MAP.default).label, color:(CLASS_MAP[k]||CLASS_MAP.default).color }));
+  if(!clsEntries.length) clsEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  buildDonut('chartClassification', clsEntries.map(e=>e.label), clsEntries.map(e=>e.value), clsEntries.map(e=>e.color));
+  renderLegend('legendClassification', clsEntries);
 
-  const cls = getCounts('classification', CLASS_MAP);
-  buildDonut('chartClassification', cls.map(e=>e.label), cls.map(e=>e.value), cls.map(e=>e.color));
-  renderLegend('legendClassification', cls);
+  const payCounts = {};
+  data.forEach(d=>{ const k=norm(d.payment)||'default'; payCounts[k]=(payCounts[k]||0)+1; });
+  let payEntries = Object.keys(payCounts).map(k=>({ value:payCounts[k], label:(PAY_MAP[k]||PAY_MAP.default).label, color:(PAY_MAP[k]||PAY_MAP.default).color }));
+  if(!payEntries.length) payEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  buildDonut('chartPayment', payEntries.map(e=>e.label), payEntries.map(e=>e.value), payEntries.map(e=>e.color));
+  renderLegend('legendPayment', payEntries);
 
-  const pay = getCounts('payment', PAY_MAP);
-  buildDonut('chartPayment', pay.map(e=>e.label), pay.map(e=>e.value), pay.map(e=>e.color));
-  renderLegend('legendPayment', pay);
+  const propCounts = {};
+  data.forEach(d=>{ const k=norm(d.propertyType)||'default'; propCounts[k]=(propCounts[k]||0)+1; });
+  let propEntries = Object.keys(propCounts).map(k=>({ value:propCounts[k], label:(PROP_MAP[k]||PROP_MAP.default).label, color:(PROP_MAP[k]||PROP_MAP.default).color }));
+  if(!propEntries.length) propEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  buildDonut('chartPropertyType', propEntries.map(e=>e.label), propEntries.map(e=>e.value), propEntries.map(e=>e.color));
+  renderLegend('legendPropertyType', propEntries);
 
-  const prop = getCounts('propertyType', PROP_MAP);
-  buildDonut('chartPropertyType', prop.map(e=>e.label), prop.map(e=>e.value), prop.map(e=>e.color));
-  renderLegend('legendPropertyType', prop);
-
-  const stat = getCounts('status', STATUS_MAP);
-  buildDonut('chartStatus', stat.map(e=>e.label), stat.map(e=>e.value), ['#3B82F6','#F59E0B','#10B981','#EF4444','#CBD5E1']);
-  renderLegend('legendStatus', stat);
+  const statCounts = {};
+  data.forEach(d=>{ const k=norm(d.status)||'default'; statCounts[k]=(statCounts[k]||0)+1; });
+  let statEntries = Object.keys(statCounts).map(k=>({ value:statCounts[k], label:(STATUS_MAP[k]||STATUS_MAP.default).label, color:(STATUS_MAP[k]||STATUS_MAP.default).color }));
+  if(!statEntries.length) statEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  buildDonut('chartStatus', statEntries.map(e=>e.label), statEntries.map(e=>e.value), statEntries.map(e=>e.color));
+  renderLegend('legendStatus', statEntries);
 }
 
+/* ============================================================
+   جدول العملاء
+   ============================================================ */
 function renderTable(data){
   const wrap = document.getElementById('tableWrap');
   const empty = document.getElementById('emptyState');
+
   if(!data.length){
-    wrap.classList.add('hidden'); empty.classList.remove('hidden'); empty.classList.add('flex'); return;
+    wrap.classList.add('hidden');
+    empty.classList.remove('hidden'); empty.classList.add('flex');
+    return;
   }
-  empty.classList.add('hidden'); empty.classList.remove('flex'); wrap.classList.remove('hidden');
+  empty.classList.add('hidden'); empty.classList.remove('flex');
+  wrap.classList.remove('hidden');
 
   document.getElementById('tableBody').innerHTML = data.map(d=>{
     const prop = styleFor(PROP_MAP, d.propertyType);
     const stat = styleFor(STATUS_MAP, d.status);
     const cls  = styleFor(CLASS_MAP, d.classification);
     return `<tr class="fade-in">
-      <td class="px-4 py-3 font-semibold text-slate-800 whitespace-nowrap">${d.name||'—'}</td>
-      <td class="px-4 py-3 text-slate-500 whitespace-nowrap" dir="ltr">${d.phone||'—'}</td>
-      <td class="px-4 py-3 text-slate-600 whitespace-nowrap">${d.budget||'—'}</td>
-      <td class="px-4 py-3 text-slate-700 whitespace-nowrap">${prop.emoji} ${prop.label}</td>
+      <td class="px-4 py-3 whitespace-nowrap">
+        <div class="flex items-center gap-2">
+          <div class="avatar-circle" style="background:${prop.color}">${initialsOf(d.name)}</div>
+          <span class="font-semibold" style="color:var(--navy)">${d.name||'—'}</span>
+        </div>
+      </td>
+      <td class="px-4 py-3 whitespace-nowrap" style="color:var(--gray)" dir="ltr">${d.phone||'—'}</td>
+      <td class="px-4 py-3 whitespace-nowrap" style="color:var(--navy-soft)">${d.budget||'—'}</td>
+      <td class="px-4 py-3 whitespace-nowrap">${prop.emoji} ${prop.label}</td>
       <td class="px-4 py-3 whitespace-nowrap">${badge(stat.label, stat.emoji, stat.classes)}</td>
       <td class="px-4 py-3 whitespace-nowrap">${badge(cls.label, cls.emoji, cls.classes)}</td>
     </tr>`;
   }).join('');
 }
 
+/* ============================================================
+   التقرير الشهري المفصل
+   ============================================================ */
 function renderReport(data){
+  const dict = I18N[LANG];
   const rows = [
-    { label: 'مجموع العملاء', emoji:'👥', value: data.length },
-    { label: I18N[LANG].apart, emoji:'🏢', value: data.filter(d=>norm(d.propertyType)==='appartement').length },
-    { label: I18N[LANG].villa, emoji:'🏰', value: data.filter(d=>norm(d.propertyType)==='villa').length },
-    { label: I18N[LANG].vip,   emoji:'🔥', value: data.filter(d=>norm(d.classification)==='vip').length },
-    { label: I18N[LANG].warm,  emoji:'🪵', value: data.filter(d=>norm(d.classification)==='warm').length },
-    { label: I18N[LANG].cold,  emoji:'❄️', value: data.filter(d=>norm(d.classification)==='cold').length },
+    { label: dict.total, emoji:'👥', value: data.length },
+    { label: dict.apart, emoji:'🏢', value: data.filter(d=>norm(d.propertyType)==='appartement').length },
+    { label: dict.villa, emoji:'🏰', value: data.filter(d=>norm(d.propertyType)==='villa').length },
+    { label: dict.local, emoji:'🏪', value: data.filter(d=>norm(d.propertyType).includes('local')).length },
+    { label: dict.vip,   emoji:'🔥', value: data.filter(d=>norm(d.classification)==='vip').length },
+    { label: dict.warm,  emoji:'🪵', value: data.filter(d=>norm(d.classification)==='warm').length },
+    { label: dict.cold,  emoji:'❄️', value: data.filter(d=>norm(d.classification)==='cold').length },
   ];
   document.getElementById('reportBody').innerHTML = rows.map(r=>`
     <tr>
-      <td class="px-4 py-3 flex items-center gap-2 text-slate-700">${r.emoji} ${r.label}</td>
-      <td class="px-4 py-3 font-bold text-blue-600 text-left">${r.value}</td>
+      <td class="px-5 py-3 flex items-center gap-2" style="color:var(--navy)">${r.emoji} ${r.label}</td>
+      <td class="px-5 py-3 font-bold" style="color:var(--blue)">${r.value}</td>
     </tr>`).join('');
 }
 
+/* ============================================================
+   الفلترة العامة
+   ============================================================ */
 function applyFilters(){
   const q = norm(document.getElementById('searchInput').value);
   let filtered = ALL_DATA.filter(d=>isInTimeRange(d.date, ACTIVE_TIME));
@@ -470,16 +533,34 @@ function applyFilters(){
   renderReport(filtered);
 }
 
+/* ============================================================
+   اللغة
+   ============================================================ */
 function applyLanguage(lang){
   LANG = lang;
+  const dict = I18N[lang];
   document.getElementById('htmlRoot').setAttribute('lang', lang);
-  document.getElementById('htmlRoot').setAttribute('dir', I18N[lang].dir);
-  document.getElementById('searchInput').setAttribute('placeholder', I18N[lang].search);
+  document.getElementById('htmlRoot').setAttribute('dir', dict.dir);
+  document.getElementById('errorText').textContent = dict.err;
+  document.getElementById('emptyStateText').textContent = dict.empty;
+  document.getElementById('searchInput').setAttribute('placeholder', dict.search);
   renderTimeChips();
   renderStatusChips();
   applyFilters();
 }
 
+/* ============================================================
+   التنقل بين التبويبات
+   ============================================================ */
+function switchView(view){
+  ACTIVE_VIEW = view;
+  document.querySelectorAll('.tab-pill').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  document.getElementById('chartsWrap').scrollIntoView({behavior:'smooth', block: view==='analytics' ? 'start' : 'nearest'});
+}
+
+/* ============================================================
+   جلب البيانات من Google Apps Script
+   ============================================================ */
 async function loadData(){
   const loading = document.getElementById('loadingState');
   const errorBanner = document.getElementById('errorBanner');
@@ -492,25 +573,41 @@ async function loadData(){
   try{
     const url = WEB_APP_URL + (WEB_APP_URL.includes('?') ? '&' : '?') + 'action=getData';
     const res = await fetch(url, { method:'GET', redirect:'follow' });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
+
+    if(!res.ok) throw new Error('فشل الاتصال بالخادم (HTTP ' + res.status + ')');
+
     const json = await res.json();
 
-    ALL_DATA = Array.isArray(json) ? json : (json.data || []);
-    if(!ALL_DATA.length){
-      errorBanner.classList.remove('hidden');
-      document.getElementById('errorText').textContent = 'الشيت فارغ أو لم يتم جلب الصفوف بشكل صحيح.';
+    let rows = [];
+    if (Array.isArray(json)) {
+      rows = json;
+    } else if (json && json.success === false) {
+      throw new Error(json.error || 'خطأ غير معروف من الخادم.');
+    } else if (json && Array.isArray(json.data)) {
+      rows = json.data;
     }
+
+    ALL_DATA = rows;
+
+    if (!ALL_DATA.length) {
+      errorBanner.classList.remove('hidden');
+      document.getElementById('errorText').textContent =
+        'تم الاتصال بالخادم بنجاح، لكن لم يتم العثور على أي بيانات في ورقة "Database".';
+    }
+
     applyFilters();
+
   } catch(err){
     errorBanner.classList.remove('hidden');
-    document.getElementById('errorText').textContent = 'خطأ في جلب البيانات: تأكد من نشر الشيت بصيغة الـ Web App (Anyone حتى Anonymous).';
+    document.getElementById('errorText').textContent = I18N[LANG].err + ' — ' + err.message;
+    console.error('Dashboard load error:', err);
   } finally {
     loading.classList.add('hidden');
     refreshIcon.classList.remove('fa-spin');
   }
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', function(){
   renderTimeChips();
   renderStatusChips();
   loadData();
@@ -518,11 +615,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('searchInput').addEventListener('input', applyFilters);
   document.getElementById('refreshBtn').addEventListener('click', loadData);
   document.getElementById('langSelect').addEventListener('change', e=>applyLanguage(e.target.value));
-  document.querySelectorAll('.tab-pill').forEach(b=>b.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab-pill').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    if(b.dataset.view==='analytics') document.getElementById('chartsWrap').scrollIntoView({behavior:'smooth'});
-  }));
+  document.querySelectorAll('.tab-pill').forEach(b=>b.addEventListener('click', ()=>switchView(b.dataset.view)));
 });
 </script>
 </body>
