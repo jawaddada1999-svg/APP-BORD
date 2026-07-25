@@ -16,157 +16,158 @@
     --navy: #0B1E3D;
     --navy-soft: #1E3A5F;
     --sky: #3B82F6;
-    --sky-light: #93C5FD;
     --bg: #FFFFFF;
     --gray: #64748B;
   }
   html, body { background: var(--bg); }
-  body { font-family: 'Tajawal', sans-serif; color: var(--navy); }
+  body { font-family: 'Tajawal', sans-serif; color: var(--navy); direction: rtl; text-align: right; }
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 8px; }
 
   .card {
     background: #FFFFFF;
-    border: 1px solid #E7ECF3;
-    box-shadow: 0 4px 18px -6px rgba(11,30,61,0.08);
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 20px -4px rgba(11,30,61,0.06);
   }
   .card-strong {
     background: #FFFFFF;
-    border: 1px solid #E2E8F5;
-    box-shadow: 0 10px 30px -10px rgba(11,30,61,0.12);
+    border: 1px solid #CBD5E1;
+    box-shadow: 0 10px 30px -10px rgba(11,30,61,0.1);
   }
-  .glow-highlight { box-shadow: 0 0 0 1px rgba(59,130,246,0.35), 0 10px 26px -10px rgba(59,130,246,0.25); }
+  .fade-in { animation: fadeIn .3s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
 
-  .fade-in { animation: fadeIn .4s ease both; }
-  @keyframes fadeIn { from { opacity:0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+  .chip { transition: all .15s ease; cursor: pointer; }
+  .chip.active-time { background: #EFF6FF !important; border-color: #3B82F6 !important; color:#1D4ED8 !important; font-weight: 700; }
+  .chip.active-status { background: #E0F2FE !important; border-color: #0EA5E9 !important; color:#0369A1 !important; font-weight: 700; }
 
-  .chip { transition: all .15s ease; }
-  .chip.active-time { background: #EFF6FF; border-color: #3B82F6; color:#1D4ED8; box-shadow: 0 0 0 1px rgba(59,130,246,0.25) inset; }
-  .chip.active-status { background: #E0F2FE; border-color: #0EA5E9; color:#0369A1; }
+  .tab-btn.active { background: #0B1E3D !important; border-color: #0B1E3D !important; color:#FFFFFF !important; }
+  .tab-btn { color: var(--navy); border-color: #E2E8F0; background:#FFFFFF; }
 
-  .tab-btn.active { background: #0B1E3D; border-color: #0B1E3D; color:#FFFFFF; }
-  .tab-btn { color: var(--navy); border-color: #E2E8F5; background:#FFFFFF; }
+  table thead th { position: sticky; top:0; background:#F8FAFC; z-index:5; color: var(--navy); }
+  tbody tr:hover { background: #F8FAFC; }
+  tbody tr { border-color: #F1F5F9; }
 
-  table thead th { position: sticky; top:0; background:#F8FAFF; z-index:5; color: var(--navy-soft); }
-  tbody tr:hover { background: #F5F9FF; }
-  tbody tr { border-color: #EEF2F9; }
-
-  .skeleton { background: linear-gradient(90deg, #EEF2F9 25%, #F7FAFF 37%, #EEF2F9 63%); background-size:400% 100%; animation: shimmer 1.4s ease infinite; }
+  .skeleton { background: linear-gradient(90deg, #F1F5F9 25%, #F8FAFC 37%, #F1F5F9 63%); background-size:400% 100%; animation: shimmer 1.4s ease infinite; }
   @keyframes shimmer { 0%{background-position:100% 50%;} 100%{background-position:0 50%;} }
 
   input::placeholder { color: #94A3B8; }
 </style>
 </head>
 
-<body class="min-h-screen">
+<body class="min-h-screen pb-12">
 
-<div class="max-w-lg mx-auto px-4 pb-16">
+<div class="max-w-md mx-auto px-4">
 
   <!-- ===================== الشريط العلوي ===================== -->
   <header class="pt-6 pb-4">
     <div class="flex items-center justify-between mb-4">
+      <!-- اختيار اللغة -->
       <div class="relative">
-        <select id="langSelect" class="card rounded-full text-xs font-semibold text-[var(--navy)] pl-3 pr-7 py-2 cursor-pointer focus:outline-none">
+        <select id="langSelect" class="card rounded-xl text-xs font-semibold text-[var(--navy)] px-3 py-2 cursor-pointer focus:outline-none">
           <option value="ar">العربية</option>
           <option value="fr">Français</option>
           <option value="en">English</option>
         </select>
       </div>
+      <!-- العنوان -->
       <h1 class="text-xl font-extrabold" style="color:var(--navy)">لوحة التحكم</h1>
-      <button id="refreshBtn" class="card w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="color:#3B82F6" title="تحديث">
+      <!-- زر التحديث -->
+      <button id="refreshBtn" class="card w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="color:#3B82F6" title="تحديث">
         <i class="fa-solid fa-rotate-right text-sm" id="refreshIcon"></i>
       </button>
     </div>
 
+    <!-- تبويبات التنقل -->
     <nav class="flex gap-2">
-      <button data-view="dashboard" class="tab-btn active flex-1 border rounded-xl py-2.5 text-sm font-bold flex items-center justify-center gap-2">
+      <button data-view="dashboard" class="tab-btn active flex-1 border rounded-xl py-2.5 text-xs font-bold flex items-center justify-center gap-2">
         <span>📊</span> لوحة التحكم
       </button>
-      <button data-view="analytics" class="tab-btn flex-1 border rounded-xl py-2.5 text-sm font-bold flex items-center justify-center gap-2">
+      <button data-view="analytics" class="tab-btn flex-1 border rounded-xl py-2.5 text-xs font-bold flex items-center justify-center gap-2">
         <span>📈</span> التحليلات المتقدمة
       </button>
     </nav>
   </header>
 
   <!-- ===================== فلتر الفترة الزمنية ===================== -->
-  <section class="flex flex-wrap gap-2 mb-3" id="timeChips"></section>
+  <section class="flex flex-wrap gap-1.5 mb-3" id="timeChips"></section>
 
-  <!-- ===================== فلتر التصنيف/الحالة + بحث ===================== -->
+  <!-- ===================== البحث وفلاتر الحالة ===================== -->
   <section class="card rounded-2xl p-3 mb-4">
     <div class="relative mb-3">
-      <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
       <input id="searchInput" type="text" placeholder="بحث بالاسم أو الهاتف..."
-        class="w-full bg-[#F7F9FC] border border-[#E2E8F5] rounded-xl pr-8 pl-3 py-2 text-sm focus:outline-none focus:border-blue-400" style="color:var(--navy)">
+        class="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-500" style="color:var(--navy)">
     </div>
-    <div id="statusChips" class="flex flex-wrap gap-2"></div>
+    <div id="statusChips" class="flex flex-wrap gap-1.5"></div>
   </section>
 
-  <!-- ===================== شريط الخطأ ===================== -->
-  <div id="errorBanner" class="hidden bg-red-50 border border-red-200 text-red-600 text-sm rounded-2xl px-4 py-3 mb-4 flex items-start gap-2 fade-in">
-    <span class="text-red-500 mt-0.5">❌</span>
-    <span id="errorText">تعذر تحميل البيانات من الشيت. تأكد من أن الرابط منشور بشكل صحيح.</span>
+  <!-- ===================== رسالة الخطأ ===================== -->
+  <div id="errorBanner" class="hidden bg-red-50 border border-red-200 text-red-600 text-xs rounded-2xl p-3 mb-4 flex items-start gap-2 fade-in">
+    <span>❌</span>
+    <span id="errorText">تعذر جلب البيانات. تأكد من نشر الشيت بصيغة الـ Web App.</span>
   </div>
 
   <!-- ===================== حالة التحميل ===================== -->
-  <div id="loadingState" class="card rounded-2xl p-5 mb-4">
-    <div class="skeleton h-8 w-full rounded-lg mb-2"></div>
-    <div class="skeleton h-8 w-full rounded-lg mb-2"></div>
-    <div class="skeleton h-8 w-full rounded-lg"></div>
+  <div id="loadingState" class="card rounded-2xl p-4 mb-4">
+    <div class="skeleton h-7 w-full rounded-lg mb-2"></div>
+    <div class="skeleton h-7 w-full rounded-lg mb-2"></div>
+    <div class="skeleton h-7 w-full rounded-lg"></div>
   </div>
 
-  <!-- ===================== بطاقة إجمالي العملاء (مميزة) ===================== -->
-  <section id="totalCard" class="card-strong glow-highlight rounded-2xl p-4 mb-3 hidden fade-in">
+  <!-- ===================== بطاقة إجمالي العملاء ===================== -->
+  <section id="totalCard" class="card-strong rounded-2xl p-4 mb-3 hidden fade-in">
     <div class="flex items-center justify-between">
-      <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style="background:#EFF6FF">👥</div>
       <div class="text-right">
-        <p class="text-xs mb-1" style="color:var(--gray)">مجموع العملاء</p>
-        <p class="text-3xl font-extrabold" id="totalCount" style="color:var(--navy)">0</p>
+        <p class="text-xs mb-1 text-slate-500">مجموع العملاء</p>
+        <p class="text-2xl font-black" id="totalCount" style="color:var(--navy)">0</p>
       </div>
+      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-blue-50 text-blue-600">👥</div>
     </div>
   </section>
 
-  <!-- ===================== قائمة الإحصائيات (شكل سطور) ===================== -->
-  <section id="statsList" class="card rounded-2xl mb-4 divide-y hidden" style="border-color:#E7ECF3"></section>
+  <!-- ===================== إحصائيات سريعة ===================== -->
+  <section id="statsList" class="card rounded-2xl mb-4 divide-y hidden" style="border-color:#E2E8F0"></section>
 
-  <!-- ===================== الرسوم البيانية الدائرية ===================== -->
+  <!-- ===================== المبيانات الدائرية ===================== -->
   <section id="chartsWrap" class="space-y-4 mb-4 hidden">
     <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3" style="color:var(--navy)">تفصيل التصنيف</h3>
-      <div class="h-64"><canvas id="chartClassification"></canvas></div>
-      <div id="legendClassification" class="mt-3 space-y-2"></div>
+      <h3 class="text-xs font-bold mb-3 text-slate-700">تفصيل التصنيف</h3>
+      <div class="h-56"><canvas id="chartClassification"></canvas></div>
+      <div id="legendClassification" class="mt-3 space-y-1.5 text-xs"></div>
     </div>
     <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3" style="color:var(--navy)">طريقة الدفع</h3>
-      <div class="h-64"><canvas id="chartPayment"></canvas></div>
-      <div id="legendPayment" class="mt-3 space-y-2"></div>
+      <h3 class="text-xs font-bold mb-3 text-slate-700">طريقة الدفع</h3>
+      <div class="h-56"><canvas id="chartPayment"></canvas></div>
+      <div id="legendPayment" class="mt-3 space-y-1.5 text-xs"></div>
     </div>
     <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3" style="color:var(--navy)">نوع العقار</h3>
-      <div class="h-64"><canvas id="chartPropertyType"></canvas></div>
-      <div id="legendPropertyType" class="mt-3 space-y-2"></div>
+      <h3 class="text-xs font-bold mb-3 text-slate-700">نوع العقار</h3>
+      <div class="h-56"><canvas id="chartPropertyType"></canvas></div>
+      <div id="legendPropertyType" class="mt-3 space-y-1.5 text-xs"></div>
     </div>
     <div class="card rounded-2xl p-4">
-      <h3 class="text-sm font-bold mb-3" style="color:var(--navy)">توزيع الحالات</h3>
-      <div class="h-64"><canvas id="chartStatus"></canvas></div>
-      <div id="legendStatus" class="mt-3 space-y-2"></div>
+      <h3 class="text-xs font-bold mb-3 text-slate-700">توزيع الحالات</h3>
+      <div class="h-56"><canvas id="chartStatus"></canvas></div>
+      <div id="legendStatus" class="mt-3 space-y-1.5 text-xs"></div>
     </div>
   </section>
 
   <!-- ===================== حالة فارغة ===================== -->
-  <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center" style="color:var(--gray)">
-    <div class="text-3xl mb-2">🗂️</div>
-    <p class="text-sm" id="emptyStateText">لا توجد بيانات مطابقة</p>
+  <div id="emptyState" class="hidden flex-col items-center justify-center py-12 text-center text-slate-400">
+    <div class="text-2xl mb-1">🗂️</div>
+    <p class="text-xs" id="emptyStateText">لا توجد بيانات مطابقة</p>
   </div>
 
-  <!-- ===================== جدول نظرة عامة على العملاء ===================== -->
+  <!-- ===================== جدول العملاء ===================== -->
   <section id="tableWrap" class="card rounded-2xl overflow-hidden mb-4 hidden">
-    <div class="px-4 pt-4 pb-2">
-      <h3 class="text-sm font-bold" style="color:var(--navy)">نظرة عامة على العملاء</h3>
+    <div class="px-4 pt-3 pb-2">
+      <h3 class="text-xs font-bold text-slate-700">قائمة العملاء</h3>
     </div>
-    <div class="overflow-x-auto max-h-[480px]">
+    <div class="overflow-x-auto max-h-[420px]">
       <table class="w-full text-xs">
         <thead>
-          <tr class="text-[10px] border-b" style="border-color:#EEF2F9">
+          <tr class="text-[10px] border-b border-slate-100">
             <th class="text-right px-3 py-2 font-bold">الاسم</th>
             <th class="text-right px-3 py-2 font-bold">الهاتف</th>
             <th class="text-right px-3 py-2 font-bold">الميزانية</th>
@@ -175,75 +176,57 @@
             <th class="text-right px-3 py-2 font-bold">التصنيف</th>
           </tr>
         </thead>
-        <tbody id="tableBody" class="divide-y" style="border-color:#EEF2F9"></tbody>
+        <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
       </table>
     </div>
   </section>
 
   <!-- ===================== التقرير الشهري المفصل ===================== -->
   <section class="card rounded-2xl overflow-hidden mb-4">
-    <div class="px-4 pt-4 pb-2 flex items-center gap-2">
+    <div class="px-4 pt-3 pb-2 flex items-center gap-2">
       <span>📊</span>
-      <h3 class="text-sm font-bold" style="color:var(--navy)">التقرير الشهري المفصل</h3>
+      <h3 class="text-xs font-bold text-slate-700">التقرير الشهري المفصل</h3>
     </div>
     <table class="w-full text-xs">
       <thead>
-        <tr class="text-[10px] border-b" style="border-color:#EEF2F9; color:var(--navy-soft)">
+        <tr class="text-[10px] border-b border-slate-100 text-slate-500">
           <th class="text-right px-4 py-2 font-bold">المؤشر / الفئة</th>
-          <th class="text-right px-4 py-2 font-bold">العدد الحالي</th>
+          <th class="text-left px-4 py-2 font-bold">العدد الحالي</th>
         </tr>
       </thead>
-      <tbody id="reportBody" class="divide-y" style="border-color:#EEF2F9"></tbody>
+      <tbody id="reportBody" class="divide-y divide-slate-100"></tbody>
     </table>
   </section>
 
-  <footer class="text-center text-[11px] pt-4" style="color:#94A3B8">
-    لوحة تحكم العقارات — البيانات متزامنة مع Google Sheets
+  <footer class="text-center text-[10px] text-slate-400 pt-2">
+    لوحة تحكم العقارات — مصممة خصيصاً لك
   </footer>
 
 </div>
 
 <script>
 /* ============================================================
-   ⚙️ تم دمج رابط الـ Web App الخاص بك هنا بنجاح
+   🔗 رابط الـ Web App الخاص بك
    ============================================================ */
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQ7N7XkQkU17S49C6oT7Tz4s6gXQ8R1J6gQ4X6kQkU17S49C6oT7Tz4s6gXQ8R/exec';
 
-/* ============================================================
-   الترجمات
-   ============================================================ */
 const I18N = {
-  ar: { dir:'rtl', dashboard:'لوحة التحكم', analytics:'التحليلات المتقدمة',
-        search:'بحث بالاسم أو الهاتف...',
-        total:'مجموع العملاء', apart:'الشقق', villa:'الفيلات', local:'المحلات التجارية',
-        vip:'VIP عملاء', warm:'WARM عملاء', cold:'COLD عملاء', empty:'لا توجد بيانات مطابقة',
-        err:'تعذر تحميل البيانات من الشيت. تأكد من أن الرابط منشور بشكل صحيح.' },
-  fr: { dir:'ltr', dashboard:'Tableau de bord', analytics:'Analyses avancées',
-        search:'Rechercher nom ou téléphone...',
-        total:'Total clients', apart:'Appartements', villa:'Villas', local:'Locaux commerciaux',
-        vip:'Clients VIP', warm:'Clients WARM', cold:'Clients COLD', empty:'Aucune donnée trouvée',
-        err:"Échec du chargement. Vérifiez que le lien est bien publié." },
-  en: { dir:'ltr', dashboard:'Dashboard', analytics:'Advanced Analytics',
-        search:'Search name or phone...',
-        total:'Total clients', apart:'Apartments', villa:'Villas', local:'Commercial units',
-        vip:'VIP clients', warm:'WARM clients', cold:'COLD clients', empty:'No matching data',
-        err:'Failed to load data. Make sure the link is properly published.' }
+  ar: { dir:'rtl', search:'بحث بالاسم أو الهاتف...', apart:'الشقق', villa:'الفيلات', local:'المحلات التجارية', vip:'VIP عملاء', warm:'WARM عملاء', cold:'COLD عملاء', empty:'لا توجد بيانات مطابقة' },
+  fr: { dir:'ltr', search:'Rechercher nom ou téléphone...', apart:'Appartements', villa:'Villas', local:'Locaux commerciaux', vip:'VIP', warm:'WARM', cold:'COLD', empty:'Aucune donnée' },
+  en: { dir:'ltr', search:'Search name or phone...', apart:'Apartments', villa:'Villas', local:'Commercial units', vip:'VIP', warm:'WARM', cold:'COLD', empty:'No data' }
 };
 let LANG = 'ar';
 
-/* ============================================================
-   خرائط الألوان
-   ============================================================ */
 const STATUS_MAP = {
-  'nouveau':  { label:'Nouveau', emoji:'🆕', color:'#3B82F6', classes:'bg-blue-50 text-blue-700 border-blue-200' },
-  'en cours': { label:'En cours', emoji:'⏳', color:'#F59E0B', classes:'bg-amber-50 text-amber-700 border-amber-200' },
-  'vendu':    { label:'Vendu', emoji:'✅', color:'#10B981', classes:'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  'perdu':    { label:'Perdu', emoji:'❌', color:'#EF4444', classes:'bg-red-50 text-red-700 border-red-200' },
-  'default':  { label:'—', emoji:'❔', color:'#CBD5E1', classes:'bg-slate-50 text-slate-500 border-slate-200' }
+  'nouveau':  { label:'Nouveau', emoji:'🆕', classes:'bg-blue-50 text-blue-700 border-blue-200' },
+  'en cours': { label:'En cours', emoji:'⏳', classes:'bg-amber-50 text-amber-700 border-amber-200' },
+  'vendu':    { label:'Vendu', emoji:'✅', classes:'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  'perdu':    { label:'Perdu', emoji:'❌', classes:'bg-red-50 text-red-700 border-red-200' },
+  'default':  { label:'—', emoji:'❔', classes:'bg-slate-50 text-slate-500 border-slate-200' }
 };
 const CLASS_MAP = {
   'vip':  { label:'VIP', emoji:'🔥', color:'#F59E0B', classes:'bg-orange-50 text-orange-700 border-orange-200' },
-  'warm': { label:'WARM', emoji:'🪵', color:'#60A5FA', classes:'bg-blue-50 text-blue-600 border-blue-200' },
+  'warm': { label:'WARM', emoji:'🪵', color:'#3B82F6', classes:'bg-blue-50 text-blue-600 border-blue-200' },
   'cold': { label:'COLD', emoji:'❄️', color:'#0EA5E9', classes:'bg-sky-50 text-sky-700 border-sky-200' },
   'default': { label:'—', emoji:'—', color:'#CBD5E1', classes:'bg-slate-50 text-slate-500 border-slate-200' }
 };
@@ -263,21 +246,17 @@ const PAY_MAP = {
 
 const TIME_KEYS = ['all','today','yesterday','last_week','last_month'];
 const TIME_LABELS = {
-  ar:{all:'الكل',today:'اليوم',yesterday:'أمس',last_week:'الأسبوع الماضي',last_month:'الشهر الماضي'},
-  fr:{all:'Tout',today:"Aujourd'hui",yesterday:'Hier',last_week:'Semaine dernière',last_month:'Mois dernier'},
-  en:{all:'All',today:'Today',yesterday:'Yesterday',last_week:'Last week',last_month:'Last month'}
+  ar:{all:'الكل',today:'اليوم',yesterday:'أمس',last_week:'الأسبوع',last_month:'الشهر'},
+  fr:{all:'Tout',today:"Aujourd'hui",yesterday:'Hier',last_week:'Semaine',last_month:'Mois'},
+  en:{all:'All',today:'Today',yesterday:'Yesterday',last_week:'Week',last_month:'Month'}
 };
 const STATUS_KEYS = ['all','vip','warm','cold','nouveau','en cours','vendu','perdu'];
 
 let ALL_DATA = [];
 let ACTIVE_TIME = 'all';
 let ACTIVE_STATUS = 'all';
-let ACTIVE_VIEW = 'dashboard';
 let charts = {};
 
-/* ============================================================
-   أدوات مساعدة
-   ============================================================ */
 function norm(s){ return (s||'').toString().toLowerCase().trim(); }
 function styleFor(map, v){ return map[norm(v)] || map['default']; }
 
@@ -289,6 +268,7 @@ function parseDMY(str){
   if(!d||!m||!y) return null;
   return new Date(y,m-1,d);
 }
+
 function isInTimeRange(dateStr, range){
   if(range==='all') return true;
   const d = parseDMY(dateStr);
@@ -304,15 +284,12 @@ function isInTimeRange(dateStr, range){
 
 function badge(label, emoji, classes){
   if(!label) return '<span class="text-slate-400">—</span>';
-  return `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border ${classes}">${emoji||''} ${label}</span>`;
+  return `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${classes}">${emoji||''} ${label}</span>`;
 }
 
-/* ============================================================
-   عرض الفلاتر
-   ============================================================ */
 function renderTimeChips(){
   document.getElementById('timeChips').innerHTML = TIME_KEYS.map(k=>`
-    <button data-time="${k}" class="chip ${k===ACTIVE_TIME?'active-time':'bg-white text-slate-500 border-[#E2E8F5]'} border rounded-full px-3.5 py-2 text-xs font-semibold">
+    <button data-time="${k}" class="chip ${k===ACTIVE_TIME?'active-time':'bg-white text-slate-600 border-slate-200'} border rounded-xl px-3 py-1.5 text-xs font-semibold">
       ${TIME_LABELS[LANG][k]}
     </button>`).join('');
   document.querySelectorAll('#timeChips button').forEach(b=>{
@@ -322,10 +299,9 @@ function renderTimeChips(){
 
 function renderStatusChips(){
   document.getElementById('statusChips').innerHTML = STATUS_KEYS.map(k=>{
-    let label = k==='all' ? (LANG==='ar'?'الكل':(LANG==='fr'?'Tout':'All')) :
-                (CLASS_MAP[k] ? CLASS_MAP[k].label : (STATUS_MAP[k] ? STATUS_MAP[k].label : k));
-    let emoji = CLASS_MAP[k] ? CLASS_MAP[k].emoji : (STATUS_MAP[k] ? STATUS_MAP[k].emoji : '🔎');
-    return `<button data-status="${k}" class="chip ${k===ACTIVE_STATUS?'active-status':'bg-white text-slate-500 border-[#E2E8F5]'} border rounded-full px-3 py-1.5 text-[11px] font-semibold flex items-center gap-1">
+    let label = k==='all' ? (LANG==='ar'?'الكل':'All') : (CLASS_MAP[k]?.label || STATUS_MAP[k]?.label || k);
+    let emoji = CLASS_MAP[k]?.emoji || STATUS_MAP[k]?.emoji || '🔎';
+    return `<button data-status="${k}" class="chip ${k===ACTIVE_STATUS?'active-status':'bg-white text-slate-600 border-slate-200'} border rounded-xl px-2.5 py-1 text-[11px] font-semibold flex items-center gap-1">
       ${emoji} ${label}</button>`;
   }).join('');
   document.querySelectorAll('#statusChips button').forEach(b=>{
@@ -333,11 +309,7 @@ function renderStatusChips(){
   });
 }
 
-/* ============================================================
-   الإحصائيات
-   ============================================================ */
 function renderStats(data){
-  const dict = I18N[LANG];
   document.getElementById('totalCount').textContent = data.length;
   document.getElementById('totalCard').classList.remove('hidden');
 
@@ -351,71 +323,43 @@ function renderStats(data){
   };
 
   const rows = [
-    { label: dict.apart, emoji:'🏢', value: counts.apart },
-    { label: dict.villa, emoji:'🏰', value: counts.villa },
-    { label: dict.local, emoji:'🏪', value: counts.local },
-    { label: dict.vip,   emoji:'🔥', value: counts.vip },
-    { label: dict.warm,  emoji:'🪵', value: counts.warm },
-    { label: dict.cold,  emoji:'❄️', value: counts.cold },
+    { label: I18N[LANG].apart, emoji:'🏢', value: counts.apart },
+    { label: I18N[LANG].villa, emoji:'🏰', value: counts.villa },
+    { label: I18N[LANG].local, emoji:'🏪', value: counts.local },
+    { label: I18N[LANG].vip,   emoji:'🔥', value: counts.vip },
+    { label: I18N[LANG].warm,  emoji:'🪵', value: counts.warm },
+    { label: I18N[LANG].cold,  emoji:'❄️', value: counts.cold },
   ];
 
   const list = document.getElementById('statsList');
   list.classList.remove('hidden');
   list.innerHTML = rows.map(r=>`
-    <div class="flex items-center justify-between px-4 py-3.5">
-      <span class="font-extrabold text-lg" style="color:#3B82F6">${r.value}</span>
-      <span class="text-sm flex items-center gap-2" style="color:var(--navy)">${r.label} <span>${r.emoji}</span></span>
+    <div class="flex items-center justify-between px-4 py-3">
+      <span class="font-bold text-base text-blue-600">${r.value}</span>
+      <span class="text-xs flex items-center gap-2 text-slate-700">${r.label} <span>${r.emoji}</span></span>
     </div>`).join('');
 }
 
-/* ============================================================
-   الرسوم البيانية — Donut مع نسب مئوية واضحة
-   ============================================================ */
 function buildDonut(canvasId, labels, values, colors){
   const ctx = document.getElementById(canvasId);
   if(!ctx) return;
   if(charts[canvasId]) charts[canvasId].destroy();
-
   const total = values.reduce((a,b)=>a+b,0) || 1;
 
   charts[canvasId] = new Chart(ctx, {
     type:'doughnut',
-    data:{
-      labels,
-      datasets:[{
-        data: values,
-        backgroundColor: colors,
-        borderColor:'#FFFFFF',
-        borderWidth: 3,
-        hoverOffset: 8
-      }]
-    },
+    data:{ labels, datasets:[{ data:values, backgroundColor:colors, borderWidth:2, borderColor:'#FFFFFF' }] },
     plugins: [ChartDataLabels],
     options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      cutout:'58%',
+      responsive:true, maintainAspectRatio:false, cutout:'60%',
       plugins:{
         legend:{ display:false },
         tooltip:{
-          rtl: LANG==='ar',
-          bodyFont:{ family:'Tajawal' },
-          titleFont:{ family:'Tajawal' },
-          callbacks:{
-            label: function(ctx){
-              const val = ctx.raw;
-              const pct = Math.round((val/total)*100);
-              return ctx.label + ': ' + val + ' (' + pct + '%)';
-            }
-          }
+          callbacks:{ label: ctx => `${ctx.label}: ${ctx.raw} (${Math.round((ctx.raw/total)*100)}%)` }
         },
         datalabels:{
-          color:'#FFFFFF',
-          font:{ family:'Tajawal', weight:'bold', size:12 },
-          formatter: function(value){
-            const pct = Math.round((value/total)*100);
-            return pct > 0 ? pct + '%' : '';
-          }
+          color:'#FFFFFF', font:{ family:'Tajawal', weight:'bold', size:11 },
+          formatter: val => (Math.round((val/total)*100) > 0 ? Math.round((val/total)*100) + '%' : '')
         }
       }
     }
@@ -424,105 +368,80 @@ function buildDonut(canvasId, labels, values, colors){
 
 function renderLegend(containerId, entries){
   const total = entries.reduce((s,e)=>s+e.value,0) || 1;
-  document.getElementById(containerId).innerHTML = entries.map(e=>{
-    const pct = Math.round((e.value/total)*100);
-    return `<div class="flex items-center justify-between text-xs">
-      <span style="color:var(--gray)">(${pct}%) ${e.value}</span>
-      <span class="flex items-center gap-2" style="color:var(--navy)">${e.label} <span class="w-2.5 h-2.5 rounded-full" style="background:${e.color}"></span></span>
-    </div>`;
-  }).join('');
+  document.getElementById(containerId).innerHTML = entries.map(e=>`
+    <div class="flex items-center justify-between">
+      <span class="text-slate-500">${Math.round((e.value/total)*100)}% (${e.value})</span>
+      <span class="flex items-center gap-1.5 font-medium text-slate-700">${e.label} <span class="w-2.5 h-2.5 rounded-full" style="background:${e.color}"></span></span>
+    </div>`).join('');
 }
 
 function renderCharts(data){
   document.getElementById('chartsWrap').classList.remove('hidden');
 
-  // التصنيف
-  const clsCounts = {};
-  data.forEach(d=>{ const k=norm(d.classification)||'default'; clsCounts[k]=(clsCounts[k]||0)+1; });
-  let clsEntries = Object.keys(clsCounts).map(k=>({ key:k, value:clsCounts[k], label:(CLASS_MAP[k]||CLASS_MAP.default).label, color:(CLASS_MAP[k]||CLASS_MAP.default).color }));
-  if(!clsEntries.length) clsEntries = [{ value:1, label:'لا توجد بيانات', color:'#E2E8F5' }];
-  buildDonut('chartClassification', clsEntries.map(e=>e.label), clsEntries.map(e=>e.value), clsEntries.map(e=>e.color));
-  renderLegend('legendClassification', clsEntries);
+  const getCounts = (field, map) => {
+    const counts = {};
+    data.forEach(d=>{ const k=norm(d[field])||'default'; counts[k]=(counts[k]||0)+1; });
+    let entries = Object.keys(counts).map(k=>({ key:k, value:counts[k], label:(map[k]||map.default).label, color:(map[k]||map.default).color }));
+    if(!entries.length) entries = [{ value:1, label:'لا توجد بيانات', color:'#E2E8F0' }];
+    return entries;
+  };
 
-  // الدفع
-  const payCounts = {};
-  data.forEach(d=>{ const k=norm(d.payment)||'default'; payCounts[k]=(payCounts[k]||0)+1; });
-  let payEntries = Object.keys(payCounts).map(k=>({ key:k, value:payCounts[k], label:(PAY_MAP[k]||PAY_MAP.default).label, color:(PAY_MAP[k]||PAY_MAP.default).color }));
-  if(!payEntries.length) payEntries = [{ value:1, label:'لا توجد بيانات', color:'#E2E8F5' }];
-  buildDonut('chartPayment', payEntries.map(e=>e.label), payEntries.map(e=>e.value), payEntries.map(e=>e.color));
-  renderLegend('legendPayment', payEntries);
+  const cls = getCounts('classification', CLASS_MAP);
+  buildDonut('chartClassification', cls.map(e=>e.label), cls.map(e=>e.value), cls.map(e=>e.color));
+  renderLegend('legendClassification', cls);
 
-  // نوع العقار
-  const propCounts = {};
-  data.forEach(d=>{ const k=norm(d.propertyType)||'default'; propCounts[k]=(propCounts[k]||0)+1; });
-  let propEntries = Object.keys(propCounts).map(k=>({ key:k, value:propCounts[k], label:(PROP_MAP[k]||PROP_MAP.default).label, color:(PROP_MAP[k]||PROP_MAP.default).color }));
-  if(!propEntries.length) propEntries = [{ value:1, label:'لا توجد بيانات', color:'#E2E8F5' }];
-  buildDonut('chartPropertyType', propEntries.map(e=>e.label), propEntries.map(e=>e.value), propEntries.map(e=>e.color));
-  renderLegend('legendPropertyType', propEntries);
+  const pay = getCounts('payment', PAY_MAP);
+  buildDonut('chartPayment', pay.map(e=>e.label), pay.map(e=>e.value), pay.map(e=>e.color));
+  renderLegend('legendPayment', pay);
 
-  // الحالة
-  const statCounts = {};
-  data.forEach(d=>{ const k=norm(d.status)||'default'; statCounts[k]=(statCounts[k]||0)+1; });
-  let statEntries = Object.keys(statCounts).map(k=>({ key:k, value:statCounts[k], label:(STATUS_MAP[k]||STATUS_MAP.default).label, color:(STATUS_MAP[k]||STATUS_MAP.default).color }));
-  if(!statEntries.length) statEntries = [{ value:1, label:'لا توجد بيانات', color:'#E2E8F5' }];
-  buildDonut('chartStatus', statEntries.map(e=>e.label), statEntries.map(e=>e.value), statEntries.map(e=>e.color));
-  renderLegend('legendStatus', statEntries);
+  const prop = getCounts('propertyType', PROP_MAP);
+  buildDonut('chartPropertyType', prop.map(e=>e.label), prop.map(e=>e.value), prop.map(e=>e.color));
+  renderLegend('legendPropertyType', prop);
+
+  const stat = getCounts('status', STATUS_MAP);
+  buildDonut('chartStatus', stat.map(e=>e.label), stat.map(e=>e.value), ['#3B82F6','#F59E0B','#10B981','#EF4444','#CBD5E1']);
+  renderLegend('legendStatus', stat);
 }
 
-/* ============================================================
-   جدول العملاء
-   ============================================================ */
 function renderTable(data){
   const wrap = document.getElementById('tableWrap');
   const empty = document.getElementById('emptyState');
-
   if(!data.length){
-    wrap.classList.add('hidden');
-    empty.classList.remove('hidden'); empty.classList.add('flex');
-    return;
+    wrap.classList.add('hidden'); empty.classList.remove('hidden'); empty.classList.add('flex'); return;
   }
-  empty.classList.add('hidden'); empty.classList.remove('flex');
-  wrap.classList.remove('hidden');
+  empty.classList.add('hidden'); empty.classList.remove('flex'); wrap.classList.remove('hidden');
 
   document.getElementById('tableBody').innerHTML = data.map(d=>{
     const prop = styleFor(PROP_MAP, d.propertyType);
     const stat = styleFor(STATUS_MAP, d.status);
     const cls  = styleFor(CLASS_MAP, d.classification);
     return `<tr class="fade-in">
-      <td class="px-3 py-2.5 font-semibold whitespace-nowrap" style="color:var(--navy)">${d.name||'—'}</td>
-      <td class="px-3 py-2.5 whitespace-nowrap" style="color:var(--gray)" dir="ltr">${d.phone||'—'}</td>
-      <td class="px-3 py-2.5 whitespace-nowrap" style="color:var(--navy-soft)">${d.budget||'—'}</td>
-      <td class="px-3 py-2.5 whitespace-nowrap">${prop.emoji} ${prop.label}</td>
+      <td class="px-3 py-2.5 font-semibold text-slate-800 whitespace-nowrap">${d.name||'—'}</td>
+      <td class="px-3 py-2.5 text-slate-500 whitespace-nowrap" dir="ltr">${d.phone||'—'}</td>
+      <td class="px-3 py-2.5 text-slate-600 whitespace-nowrap">${d.budget||'—'}</td>
+      <td class="px-3 py-2.5 text-slate-700 whitespace-nowrap">${prop.emoji} ${prop.label}</td>
       <td class="px-3 py-2.5 whitespace-nowrap">${badge(stat.label, stat.emoji, stat.classes)}</td>
       <td class="px-3 py-2.5 whitespace-nowrap">${badge(cls.label, cls.emoji, cls.classes)}</td>
     </tr>`;
   }).join('');
 }
 
-/* ============================================================
-   التقرير الشهري المفصل
-   ============================================================ */
 function renderReport(data){
-  const dict = I18N[LANG];
   const rows = [
-    { label: dict.total, emoji:'👥', value: data.length },
-    { label: dict.apart, emoji:'🏢', value: data.filter(d=>norm(d.propertyType)==='appartement').length },
-    { label: dict.villa, emoji:'🏰', value: data.filter(d=>norm(d.propertyType)==='villa').length },
-    { label: dict.local, emoji:'🏪', value: data.filter(d=>norm(d.propertyType).includes('local')).length },
-    { label: dict.vip,   emoji:'🔥', value: data.filter(d=>norm(d.classification)==='vip').length },
-    { label: dict.warm,  emoji:'🪵', value: data.filter(d=>norm(d.classification)==='warm').length },
-    { label: dict.cold,  emoji:'❄️', value: data.filter(d=>norm(d.classification)==='cold').length },
+    { label: 'مجموع العملاء', emoji:'👥', value: data.length },
+    { label: I18N[LANG].apart, emoji:'🏢', value: data.filter(d=>norm(d.propertyType)==='appartement').length },
+    { label: I18N[LANG].villa, emoji:'🏰', value: data.filter(d=>norm(d.propertyType)==='villa').length },
+    { label: I18N[LANG].vip,   emoji:'🔥', value: data.filter(d=>norm(d.classification)==='vip').length },
+    { label: I18N[LANG].warm,  emoji:'🪵', value: data.filter(d=>norm(d.classification)==='warm').length },
+    { label: I18N[LANG].cold,  emoji:'❄️', value: data.filter(d=>norm(d.classification)==='cold').length },
   ];
   document.getElementById('reportBody').innerHTML = rows.map(r=>`
     <tr>
-      <td class="px-4 py-2.5 flex items-center gap-2" style="color:var(--navy)">${r.emoji} ${r.label}</td>
-      <td class="px-4 py-2.5 font-bold" style="color:#3B82F6">${r.value}</td>
+      <td class="px-4 py-2.5 flex items-center gap-2 text-slate-700">${r.emoji} ${r.label}</td>
+      <td class="px-4 py-2.5 font-bold text-blue-600 text-left">${r.value}</td>
     </tr>`).join('');
 }
 
-/* ============================================================
-   الفلترة العامة
-   ============================================================ */
 function applyFilters(){
   const q = norm(document.getElementById('searchInput').value);
   let filtered = ALL_DATA.filter(d=>isInTimeRange(d.date, ACTIVE_TIME));
@@ -538,34 +457,16 @@ function applyFilters(){
   renderReport(filtered);
 }
 
-/* ============================================================
-   اللغة
-   ============================================================ */
 function applyLanguage(lang){
   LANG = lang;
-  const dict = I18N[lang];
   document.getElementById('htmlRoot').setAttribute('lang', lang);
-  document.getElementById('htmlRoot').setAttribute('dir', dict.dir);
-  document.getElementById('errorText').textContent = dict.err;
-  document.getElementById('emptyStateText').textContent = dict.empty;
-  document.getElementById('searchInput').setAttribute('placeholder', dict.search);
+  document.getElementById('htmlRoot').setAttribute('dir', I18N[lang].dir);
+  document.getElementById('searchInput').setAttribute('placeholder', I18N[lang].search);
   renderTimeChips();
   renderStatusChips();
   applyFilters();
 }
 
-/* ============================================================
-   التنقل بين التبويبات
-   ============================================================ */
-function switchView(view){
-  ACTIVE_VIEW = view;
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
-  document.getElementById('chartsWrap').scrollIntoView({behavior:'smooth', block: view==='analytics' ? 'start' : 'nearest'});
-}
-
-/* ============================================================
-   جلب البيانات من Google Apps Script
-   ============================================================ */
 async function loadData(){
   const loading = document.getElementById('loadingState');
   const errorBanner = document.getElementById('errorBanner');
@@ -576,50 +477,27 @@ async function loadData(){
   refreshIcon.classList.add('fa-spin');
 
   try{
-    if(!WEB_APP_URL || WEB_APP_URL.includes('YOUR_APPS_SCRIPT_URL_HERE')){
-      throw new Error('يرجى ضبط WEB_APP_URL برابط الـ Web App الخاص بك أولاً.');
-    }
-
     const url = WEB_APP_URL + (WEB_APP_URL.includes('?') ? '&' : '?') + 'action=getData';
     const res = await fetch(url, { method:'GET', redirect:'follow' });
-
-    if(!res.ok) throw new Error('فشل الاتصال بالخادم (HTTP ' + res.status + ')');
-
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const json = await res.json();
 
-    let rows = [];
-    if (Array.isArray(json)) {
-      rows = json;
-    } else if (json && json.success === false) {
-      throw new Error(json.error || 'خطأ غير معروف من الخادم.');
-    } else if (json && Array.isArray(json.data)) {
-      rows = json.data;
-    }
-
-    ALL_DATA = rows;
-
-    if (!ALL_DATA.length) {
+    ALL_DATA = Array.isArray(json) ? json : (json.data || []);
+    if(!ALL_DATA.length){
       errorBanner.classList.remove('hidden');
-      document.getElementById('errorText').textContent =
-        'تم الاتصال بالخادم بنجاح، لكن لم يتم العثور على أي بيانات. تأكد أن ورقة "Database" تحتوي على صفوف فعلية أسفل رأس الجدول.';
+      document.getElementById('errorText').textContent = 'الشيت فارغ أو لم يتم جلب الصفوف بشكل صحيح.';
     }
-
     applyFilters();
-
   } catch(err){
     errorBanner.classList.remove('hidden');
-    document.getElementById('errorText').textContent = I18N[LANG].err + ' — ' + err.message;
-    console.error('Dashboard load error:', err);
+    document.getElementById('errorText').textContent = 'خطأ في جلب البيانات: تأكد من نشر الشيت بصيغة الـ Web App (Anyone حتى Anonymous).';
   } finally {
     loading.classList.add('hidden');
     refreshIcon.classList.remove('fa-spin');
   }
 }
 
-/* ============================================================
-   تشغيل الصفحة
-   ============================================================ */
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', ()=>{
   renderTimeChips();
   renderStatusChips();
   loadData();
@@ -627,7 +505,11 @@ document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('searchInput').addEventListener('input', applyFilters);
   document.getElementById('refreshBtn').addEventListener('click', loadData);
   document.getElementById('langSelect').addEventListener('change', e=>applyLanguage(e.target.value));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click', ()=>switchView(b.dataset.view)));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    if(b.dataset.view==='analytics') document.getElementById('chartsWrap').scrollIntoView({behavior:'smooth'});
+  }));
 });
 </script>
 </body>
