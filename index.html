@@ -13,71 +13,68 @@
 
 <style>
   :root{
-    --navy: #0F1E3D;
-    --navy-soft: #375380;
-    --blue: #2563EB;
-    --blue-light: #DBEAFE;
-    --bg: #F5F7FB;
-    --gray: #6B7A99;
-    --border: #E6EAF2;
+    --bg: #070A12;
+    --panel: #0F1420;
+    --border: rgba(255,255,255,0.08);
+    --text: #E5E7EB;
+    --muted: #94A3B8;
+    --green: #10B981;
   }
   html, body { background: var(--bg); }
-  body { font-family: 'Tajawal', sans-serif; color: var(--navy); }
+  body { font-family: 'Tajawal', sans-serif; color: var(--text); }
   ::-webkit-scrollbar { width: 8px; height:8px; }
-  ::-webkit-scrollbar-thumb { background: #C9D3E3; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 8px; }
 
-  .card {
-    background: #FFFFFF;
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
     border: 1px solid var(--border);
-    box-shadow: 0 2px 10px -4px rgba(15,30,61,0.06);
+    backdrop-filter: blur(14px);
   }
-  .card-elevated {
-    background: #FFFFFF;
-    border: 1px solid var(--border);
-    box-shadow: 0 12px 28px -12px rgba(15,30,61,0.14);
+  .glass-strong {
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.025));
+    border: 1px solid rgba(255,255,255,0.10);
   }
-
   .fade-in { animation: fadeIn .35s ease both; }
   @keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
-
-  .icon-circle { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
 
   .chip { transition: all .15s ease; white-space:nowrap; }
   .scroller { overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
   .scroller::-webkit-scrollbar { display:none; }
 
   .tab-pill { transition: all .2s ease; }
-  .tab-pill.active { background: var(--navy); color:#fff; box-shadow: 0 6px 16px -6px rgba(15,30,61,0.35); }
-  .tab-pill:not(.active) { background:#fff; color:var(--navy); border:1px solid var(--border); }
+  .tab-pill.active { background: #fff; color:#070A12; }
+  .tab-pill:not(.active) { background:rgba(255,255,255,0.05); color:var(--text); border:1px solid var(--border); }
 
-  table thead th { position: sticky; top:0; background:#FAFBFF; z-index:5; color: var(--navy-soft); }
-  tbody tr:hover { background: #F7F9FF; }
+  table thead th { position: sticky; top:0; background:#0F1420; z-index:5; color: var(--muted); }
+  tbody tr { transition: background .15s ease; }
 
-  .skeleton { background: linear-gradient(90deg, #EEF1F8 25%, #F8FAFF 37%, #EEF1F8 63%); background-size:400% 100%; animation: shimmer 1.4s ease infinite; }
+  .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 37%, rgba(255,255,255,0.04) 63%); background-size:400% 100%; animation: shimmer 1.4s ease infinite; }
   @keyframes shimmer { 0%{background-position:100% 50%;} 100%{background-position:0 50%;} }
 
-  input::placeholder { color: #9AA6BF; }
-
-  .avatar-circle { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:#fff; flex-shrink:0; }
+  input::placeholder { color: #64748B; }
+  .icon-circle { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .avatar-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:11px; color:#0B0E17; flex-shrink:0; }
 </style>
 </head>
 
 <body class="min-h-screen">
 
-<div class="max-w-2xl mx-auto px-4 sm:px-6 pb-16">
+<div class="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
 
   <!-- ===================== الشريط العلوي ===================== -->
   <header class="pt-6 pb-5">
     <div class="flex items-center justify-between mb-5">
-      <button id="refreshBtn" class="card w-11 h-11 rounded-full flex items-center justify-center shrink-0" style="color:var(--blue)" title="تحديث">
+      <button id="refreshBtn" class="glass w-11 h-11 rounded-full flex items-center justify-center shrink-0 text-amber-400" title="تحديث">
         <i class="fa-solid fa-rotate-right text-sm" id="refreshIcon"></i>
       </button>
       <div class="text-center">
-        <h1 class="text-2xl font-black" style="color:var(--navy)">لوحة التحكم</h1>
-        <p class="text-[11px]" style="color:var(--gray)">إدارة عملاء العقارات</p>
+        <h1 class="text-2xl sm:text-3xl font-black flex items-center justify-center gap-2" id="mainTitle">
+          <span>📊</span><span>لوحة تحكم العقارات</span>
+        </h1>
+        <p class="text-[12px] mt-1" style="color:var(--muted)" id="subTitle">إدارة ومتابعة عملاء العقارات لحظياً</p>
       </div>
       <div class="relative">
-        <select id="langSelect" class="card rounded-full text-xs font-semibold pl-3 pr-8 py-2.5 cursor-pointer focus:outline-none" style="color:var(--navy)">
+        <select id="langSelect" class="glass rounded-full text-xs font-semibold pl-3 pr-8 py-2.5 cursor-pointer focus:outline-none text-slate-100">
           <option value="ar">العربية</option>
           <option value="fr">Français</option>
           <option value="en">English</option>
@@ -87,47 +84,63 @@
 
     <nav class="flex gap-2">
       <button data-view="dashboard" class="tab-pill active flex-1 rounded-2xl py-3 text-sm font-bold flex items-center justify-center gap-2">
-        <i class="fa-solid fa-gauge-high text-xs"></i> لوحة التحكم
+        <i class="fa-solid fa-gauge-high text-xs"></i> <span data-i18n="nav_dashboard">لوحة التحكم</span>
       </button>
       <button data-view="analytics" class="tab-pill flex-1 rounded-2xl py-3 text-sm font-bold flex items-center justify-center gap-2">
-        <i class="fa-solid fa-chart-pie text-xs"></i> التحليلات المتقدمة
+        <i class="fa-solid fa-chart-pie text-xs"></i> <span data-i18n="nav_analytics">التحليلات المتقدمة</span>
       </button>
     </nav>
   </header>
 
-  <!-- ===================== فلتر الفترة الزمنية ===================== -->
-  <section class="scroller flex gap-2 mb-3 pb-1" id="timeChips"></section>
-
-  <!-- ===================== بحث + فلاتر التصنيف ===================== -->
-  <section class="card rounded-2xl p-4 mb-5">
-    <div class="relative mb-3">
-      <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-sm" style="color:#9AA6BF"></i>
+  <!-- ===================== نظام الفلاتر المتقدمة ===================== -->
+  <section class="glass rounded-2xl p-4 mb-5 space-y-4">
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-500"></i>
       <input id="searchInput" type="text" placeholder="بحث بالاسم أو الهاتف..."
-        class="w-full bg-[#F5F7FB] border border-[var(--border)] rounded-xl pr-10 pl-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white transition" style="color:var(--navy)">
+        class="w-full bg-black/25 border border-white/10 rounded-xl pr-10 pl-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-amber-400/50 transition">
     </div>
-    <div class="scroller flex gap-2 pb-1" id="statusChips"></div>
+
+    <div>
+      <p class="text-[11px] font-semibold mb-2 text-slate-400" data-i18n="filter_time">فلتر التوقيت</p>
+      <div class="scroller flex gap-2 pb-1" id="timeChips"></div>
+    </div>
+
+    <div>
+      <p class="text-[11px] font-semibold mb-2 text-slate-400" data-i18n="filter_class">فلتر التصنيف</p>
+      <div class="scroller flex gap-2 pb-1" id="classChips"></div>
+    </div>
+
+    <div>
+      <p class="text-[11px] font-semibold mb-2 text-slate-400" data-i18n="filter_status">فلتر الحالة</p>
+      <div class="scroller flex gap-2 pb-1" id="statusChips"></div>
+    </div>
+
+    <div>
+      <p class="text-[11px] font-semibold mb-2 text-slate-400" data-i18n="filter_property">فلتر نوع العقار</p>
+      <div class="scroller flex gap-2 pb-1" id="propertyChips"></div>
+    </div>
   </section>
 
   <!-- ===================== شريط الخطأ ===================== -->
-  <div id="errorBanner" class="hidden bg-red-50 border border-red-200 rounded-2xl px-4 py-4 mb-5 flex items-start gap-3 fade-in">
-    <div class="icon-circle bg-red-100 text-red-500"><i class="fa-solid fa-triangle-exclamation text-sm"></i></div>
-    <span id="errorText" class="text-sm text-red-600 leading-relaxed pt-1.5">تعذر تحميل البيانات من الشيت. تأكد من أن الرابط منشور بشكل صحيح.</span>
+  <div id="errorBanner" class="hidden bg-red-500/10 border border-red-500/30 rounded-2xl px-4 py-4 mb-5 flex items-start gap-3 fade-in">
+    <div class="icon-circle bg-red-500/15 text-red-400"><i class="fa-solid fa-triangle-exclamation text-sm"></i></div>
+    <span id="errorText" class="text-sm text-red-300 leading-relaxed pt-1.5">تعذر تحميل البيانات من الشيت.</span>
   </div>
 
   <!-- ===================== حالة التحميل ===================== -->
-  <div id="loadingState" class="card rounded-2xl p-5 mb-5">
+  <div id="loadingState" class="glass rounded-2xl p-5 mb-5">
     <div class="skeleton h-10 w-full rounded-xl mb-2.5"></div>
     <div class="skeleton h-10 w-full rounded-xl mb-2.5"></div>
     <div class="skeleton h-10 w-full rounded-xl"></div>
   </div>
 
-  <!-- ===================== بطاقة إجمالي العملاء ===================== -->
-  <section id="totalCard" class="card-elevated rounded-2xl p-5 mb-3 hidden fade-in" style="background: linear-gradient(135deg,#EFF6FF,#FFFFFF)">
+  <!-- ===================== خانة مجموع العملاء (أخضر فخم) ===================== -->
+  <section id="totalCard" class="rounded-2xl p-5 mb-5 hidden fade-in" style="background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.04)); border:1px solid rgba(16,185,129,0.35); box-shadow: 0 12px 30px -12px rgba(16,185,129,0.3);">
     <div class="flex items-center justify-between">
-      <div class="icon-circle bg-white shadow-sm" style="width:56px;height:56px;font-size:24px">👥</div>
+      <div class="icon-circle bg-emerald-500/20 text-emerald-300" style="width:58px;height:58px;font-size:26px">👥</div>
       <div class="text-right">
-        <p class="text-xs mb-1 font-semibold" style="color:var(--gray)">مجموع العملاء</p>
-        <p class="text-4xl font-black" id="totalCount" style="color:var(--navy)">0</p>
+        <p class="text-xs mb-1 font-bold text-emerald-300" data-i18n="total_clients">مجموع العملاء</p>
+        <p class="text-4xl font-black text-white" id="totalCount">0</p>
       </div>
     </div>
   </section>
@@ -137,49 +150,49 @@
 
   <!-- ===================== الرسوم البيانية الدائرية ===================== -->
   <section id="chartsWrap" class="space-y-4 mb-5 hidden">
-    <div class="card rounded-2xl p-5">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-fire text-xs" style="color:var(--blue)"></i>تفصيل التصنيف</h3>
+    <div class="glass rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-slate-100"><i class="fa-solid fa-fire text-xs text-amber-400"></i><span data-i18n="chart_class">تفصيل التصنيف</span></h3>
       <div class="h-64"><canvas id="chartClassification"></canvas></div>
       <div id="legendClassification" class="mt-4 space-y-2.5"></div>
     </div>
-    <div class="card rounded-2xl p-5">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-sack-dollar text-xs" style="color:var(--blue)"></i>طريقة الدفع</h3>
+    <div class="glass rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-slate-100"><i class="fa-solid fa-sack-dollar text-xs text-amber-400"></i><span data-i18n="chart_payment">طريقة الدفع</span></h3>
       <div class="h-64"><canvas id="chartPayment"></canvas></div>
       <div id="legendPayment" class="mt-4 space-y-2.5"></div>
     </div>
-    <div class="card rounded-2xl p-5">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-house text-xs" style="color:var(--blue)"></i>نوع العقار</h3>
+    <div class="glass rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-slate-100"><i class="fa-solid fa-house text-xs text-amber-400"></i><span data-i18n="chart_property">نوع العقار</span></h3>
       <div class="h-64"><canvas id="chartPropertyType"></canvas></div>
       <div id="legendPropertyType" class="mt-4 space-y-2.5"></div>
     </div>
-    <div class="card rounded-2xl p-5">
-      <h3 class="text-sm font-bold mb-4 flex items-center gap-2" style="color:var(--navy)"><i class="fa-solid fa-chart-simple text-xs" style="color:var(--blue)"></i>توزيع الحالات</h3>
+    <div class="glass rounded-2xl p-5">
+      <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-slate-100"><i class="fa-solid fa-chart-simple text-xs text-amber-400"></i><span data-i18n="chart_status">توزيع الحالات</span></h3>
       <div class="h-64"><canvas id="chartStatus"></canvas></div>
       <div id="legendStatus" class="mt-4 space-y-2.5"></div>
     </div>
   </section>
 
   <!-- ===================== حالة فارغة ===================== -->
-  <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center card rounded-2xl mb-5" style="color:var(--gray)">
+  <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center glass rounded-2xl mb-5 text-slate-500">
     <div class="text-4xl mb-3">🗂️</div>
     <p class="text-sm font-semibold" id="emptyStateText">لا توجد بيانات مطابقة</p>
   </div>
 
-  <!-- ===================== جدول نظرة عامة على العملاء ===================== -->
-  <section id="tableWrap" class="card rounded-2xl overflow-hidden mb-5 hidden">
+  <!-- ===================== جدول العملاء ===================== -->
+  <section id="tableWrap" class="glass rounded-2xl overflow-hidden mb-5 hidden">
     <div class="px-5 pt-5 pb-3">
-      <h3 class="text-sm font-bold" style="color:var(--navy)">نظرة عامة على العملاء</h3>
+      <h3 class="text-sm font-bold text-slate-100" data-i18n="clients_overview">نظرة عامة على العملاء</h3>
     </div>
     <div class="overflow-x-auto max-h-[480px]">
       <table class="w-full text-xs">
         <thead>
           <tr class="text-[10px] border-b" style="border-color:var(--border)">
-            <th class="text-right px-4 py-3 font-bold">العميل</th>
-            <th class="text-right px-4 py-3 font-bold">الهاتف</th>
-            <th class="text-right px-4 py-3 font-bold">الميزانية</th>
-            <th class="text-right px-4 py-3 font-bold">النوع</th>
-            <th class="text-right px-4 py-3 font-bold">الحالة</th>
-            <th class="text-right px-4 py-3 font-bold">التصنيف</th>
+            <th class="text-right px-4 py-3 font-bold" data-i18n="col_client">العميل</th>
+            <th class="text-right px-4 py-3 font-bold" data-i18n="col_phone">الهاتف</th>
+            <th class="text-right px-4 py-3 font-bold" data-i18n="col_budget">الميزانية</th>
+            <th class="text-right px-4 py-3 font-bold" data-i18n="col_property">النوع</th>
+            <th class="text-right px-4 py-3 font-bold" data-i18n="col_status">الحالة</th>
+            <th class="text-right px-4 py-3 font-bold" data-i18n="col_class">التصنيف</th>
           </tr>
         </thead>
         <tbody id="tableBody" class="divide-y" style="border-color:var(--border)"></tbody>
@@ -187,24 +200,28 @@
     </div>
   </section>
 
-  <!-- ===================== التقرير الشهري المفصل ===================== -->
-  <section class="card rounded-2xl overflow-hidden mb-5">
+  <!-- ===================== جدول التقرير الشهري المقارن ===================== -->
+  <section class="glass rounded-2xl overflow-hidden mb-5">
     <div class="px-5 pt-5 pb-3 flex items-center gap-2">
-      <i class="fa-solid fa-chart-column text-xs" style="color:var(--blue)"></i>
-      <h3 class="text-sm font-bold" style="color:var(--navy)">التقرير الشهري المفصل</h3>
+      <i class="fa-solid fa-chart-column text-xs text-amber-400"></i>
+      <h3 class="text-sm font-bold text-slate-100" data-i18n="monthly_report">التقرير الشهري المقارن</h3>
     </div>
-    <table class="w-full text-xs">
-      <thead>
-        <tr class="text-[10px] border-b" style="border-color:var(--border); color:var(--navy-soft)">
-          <th class="text-right px-5 py-2.5 font-bold">المؤشر / الفئة</th>
-          <th class="text-right px-5 py-2.5 font-bold">العدد الحالي</th>
-        </tr>
-      </thead>
-      <tbody id="reportBody" class="divide-y" style="border-color:var(--border)"></tbody>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs">
+        <thead>
+          <tr class="text-[10px] border-b" style="border-color:var(--border); color:var(--muted)">
+            <th class="text-right px-4 py-2.5 font-bold" data-i18n="col_indicator">المؤشر / الفئة</th>
+            <th class="text-center px-3 py-2.5 font-bold" data-i18n="col_current_month">الشهر الحالي</th>
+            <th class="text-center px-3 py-2.5 font-bold" data-i18n="col_previous_month">الشهر السابق</th>
+            <th class="text-center px-3 py-2.5 font-bold" data-i18n="col_change">نسبة التطور</th>
+          </tr>
+        </thead>
+        <tbody id="reportBody" class="divide-y" style="border-color:var(--border)"></tbody>
+      </table>
+    </div>
   </section>
 
-  <footer class="text-center text-[11px] pt-2" style="color:#9AA6BF">
+  <footer class="text-center text-[11px] pt-2 text-slate-600" data-i18n="footer">
     لوحة تحكم العقارات — البيانات متزامنة مع Google Sheets
   </footer>
 
@@ -217,65 +234,99 @@
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzfbGaJXGdctZDaRWLqWwZjXoNpRhLmUenSABML-SngK6UP3e_J8ECQIopafxemsAA2/exec';
 
 /* ============================================================
-   الترجمات
+   الترجمات الكاملة (تشمل أسماء الحالات والتصنيفات)
    ============================================================ */
 const I18N = {
-  ar: { dir:'rtl', search:'بحث بالاسم أو الهاتف...',
-        total:'مجموع العملاء', apart:'الشقق', villa:'الفيلات', local:'المحلات التجارية',
-        vip:'VIP عملاء', warm:'WARM عملاء', cold:'COLD عملاء', empty:'لا توجد بيانات مطابقة',
-        err:'تعذر تحميل البيانات من الشيت. تأكد من أن الرابط منشور بشكل صحيح.' },
-  fr: { dir:'ltr', search:'Rechercher nom ou téléphone...',
-        total:'Total clients', apart:'Appartements', villa:'Villas', local:'Locaux commerciaux',
-        vip:'Clients VIP', warm:'Clients WARM', cold:'Clients COLD', empty:'Aucune donnée trouvée',
-        err:"Échec du chargement. Vérifiez que le lien est bien publié." },
-  en: { dir:'ltr', search:'Search name or phone...',
-        total:'Total clients', apart:'Apartments', villa:'Villas', local:'Commercial units',
-        vip:'VIP clients', warm:'WARM clients', cold:'COLD clients', empty:'No matching data',
-        err:'Failed to load data. Make sure the link is properly published.' }
+  ar: { dir:'rtl', title:'لوحة تحكم العقارات', subtitle:'إدارة ومتابعة عملاء العقارات لحظياً',
+    nav_dashboard:'لوحة التحكم', nav_analytics:'التحليلات المتقدمة',
+    search:'بحث بالاسم أو الهاتف...',
+    filter_time:'فلتر التوقيت', filter_class:'فلتر التصنيف', filter_status:'فلتر الحالة', filter_property:'فلتر نوع العقار',
+    total_clients:'مجموع العملاء', clients_overview:'نظرة عامة على العملاء',
+    col_client:'العميل', col_phone:'الهاتف', col_budget:'الميزانية', col_property:'النوع', col_status:'الحالة', col_class:'التصنيف',
+    chart_class:'تفصيل التصنيف', chart_payment:'طريقة الدفع', chart_property:'نوع العقار', chart_status:'توزيع الحالات',
+    monthly_report:'التقرير الشهري المقارن', col_indicator:'المؤشر / الفئة', col_current_month:'الشهر الحالي', col_previous_month:'الشهر السابق', col_change:'نسبة التطور',
+    empty:'لا توجد بيانات مطابقة', err:'تعذر تحميل البيانات من الشيت.',
+    time_all:'الكل', time_today:'اليوم', time_yesterday:'أمس', time_week:'الأسبوع الماضي', time_month:'الشهر الماضي',
+    all_f:'الكل',
+    class_vip:'VIP', class_warm:'Warm', class_cold:'Cold',
+    status_nouveau:'Nouveau', status_encours:'En cours', status_vendu:'Vendu', status_perdu:'Perdu',
+    prop_apart:'شقة', prop_villa:'فيلا', prop_local:'محل تجاري',
+    total:'مجموع العملاء', apart:'الشقق', villa:'الفيلات', local:'المحلات التجارية',
+    footer:'لوحة تحكم العقارات — البيانات متزامنة مع Google Sheets' },
+  fr: { dir:'ltr', title:'Dashboard Immobilier', subtitle:'Gestion et suivi des clients en temps réel',
+    nav_dashboard:'Tableau de bord', nav_analytics:'Analyses avancées',
+    search:'Rechercher nom ou téléphone...',
+    filter_time:'Période', filter_class:'Classification', filter_status:'Statut', filter_property:'Type de bien',
+    total_clients:'Total clients', clients_overview:'Aperçu des clients',
+    col_client:'Client', col_phone:'Téléphone', col_budget:'Budget', col_property:'Type', col_status:'Statut', col_class:'Classification',
+    chart_class:'Détail classification', chart_payment:'Paiement', chart_property:'Type de bien', chart_status:'Répartition statuts',
+    monthly_report:'Rapport mensuel comparatif', col_indicator:'Indicateur / Catégorie', col_current_month:'Mois actuel', col_previous_month:'Mois précédent', col_change:'Évolution',
+    empty:'Aucune donnée trouvée', err:"Échec du chargement des données.",
+    time_all:'Tout', time_today:"Aujourd'hui", time_yesterday:'Hier', time_week:'Semaine dernière', time_month:'Mois dernier',
+    all_f:'Tout',
+    class_vip:'VIP', class_warm:'Warm', class_cold:'Cold',
+    status_nouveau:'Nouveau', status_encours:'En cours', status_vendu:'Vendu', status_perdu:'Perdu',
+    prop_apart:'Appartement', prop_villa:'Villa', prop_local:'Local commercial',
+    total:'Total clients', apart:'Appartements', villa:'Villas', local:'Locaux commerciaux',
+    footer:'Dashboard immobilier — données synchronisées avec Google Sheets' },
+  en: { dir:'ltr', title:'Real Estate Dashboard', subtitle:'Live client tracking and management',
+    nav_dashboard:'Dashboard', nav_analytics:'Advanced Analytics',
+    search:'Search name or phone...',
+    filter_time:'Time period', filter_class:'Classification', filter_status:'Status', filter_property:'Property type',
+    total_clients:'Total clients', clients_overview:'Clients overview',
+    col_client:'Client', col_phone:'Phone', col_budget:'Budget', col_property:'Type', col_status:'Status', col_class:'Classification',
+    chart_class:'Classification detail', chart_payment:'Payment method', chart_property:'Property type', chart_status:'Status distribution',
+    monthly_report:'Monthly comparison report', col_indicator:'Indicator / Category', col_current_month:'Current month', col_previous_month:'Previous month', col_change:'Change',
+    empty:'No matching data', err:'Failed to load data.',
+    time_all:'All', time_today:'Today', time_yesterday:'Yesterday', time_week:'Last week', time_month:'Last month',
+    all_f:'All',
+    class_vip:'VIP', class_warm:'Warm', class_cold:'Cold',
+    status_nouveau:'New', status_encours:'In progress', status_vendu:'Sold', status_perdu:'Lost',
+    prop_apart:'Apartment', prop_villa:'Villa', prop_local:'Commercial unit',
+    total:'Total clients', apart:'Apartments', villa:'Villas', local:'Commercial units',
+    footer:'Real estate dashboard — data synced with Google Sheets' }
 };
 let LANG = 'ar';
 
 /* ============================================================
-   خرائط الألوان
+   خرائط الألوان والإيموجي (ثابتة حسب الطلب بالضبط)
    ============================================================ */
-const STATUS_MAP = {
-  'nouveau':  { label:'Nouveau', emoji:'🆕', color:'#2563EB', bg:'#EFF6FF', classes:'bg-blue-50 text-blue-700 border-blue-200' },
-  'en cours': { label:'En cours', emoji:'⏳', color:'#F59E0B', bg:'#FFFBEB', classes:'bg-amber-50 text-amber-700 border-amber-200' },
-  'vendu':    { label:'Vendu', emoji:'✅', color:'#10B981', bg:'#ECFDF5', classes:'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  'perdu':    { label:'Perdu', emoji:'❌', color:'#EF4444', bg:'#FEF2F2', classes:'bg-red-50 text-red-700 border-red-200' },
-  'default':  { label:'—', emoji:'❔', color:'#94A3B8', bg:'#F8FAFC', classes:'bg-slate-50 text-slate-500 border-slate-200' }
+const CLASS_META = {
+  vip:  { color:'#22C55E', emoji:'🔥', key:'class_vip' },
+  warm: { color:'#F97316', emoji:'🪵', key:'class_warm' },
+  cold: { color:'#EF4444', emoji:'❄️', key:'class_cold' },
+  default: { color:'#64748B', emoji:'—', key:null }
 };
-const CLASS_MAP = {
-  'vip':  { label:'VIP', emoji:'🔥', color:'#F59E0B', bg:'#FFF7ED', classes:'bg-orange-50 text-orange-700 border-orange-200' },
-  'warm': { label:'WARM', emoji:'🪵', color:'#3B82F6', bg:'#EFF6FF', classes:'bg-blue-50 text-blue-600 border-blue-200' },
-  'cold': { label:'COLD', emoji:'❄️', color:'#0EA5E9', bg:'#F0F9FF', classes:'bg-sky-50 text-sky-700 border-sky-200' },
-  'default': { label:'—', emoji:'—', color:'#94A3B8', bg:'#F8FAFC', classes:'bg-slate-50 text-slate-500 border-slate-200' }
+const STATUS_META = {
+  'nouveau':  { color:'#3B82F6', emoji:'🆕', key:'status_nouveau' },
+  'en cours': { color:'#92400E', emoji:'⏳', key:'status_encours' },
+  'vendu':    { color:'#22C55E', emoji:'✅', key:'status_vendu' },
+  'perdu':    { color:'#EF4444', emoji:'❌', key:'status_perdu' },
+  default:    { color:'#64748B', emoji:'—', key:null }
 };
-const PROP_MAP = {
-  'appartement': { label:'شقة', emoji:'🏢', color:'#2563EB' },
-  'villa': { label:'فيلا', emoji:'🏰', color:'#7C3AED' },
-  'local comercial': { label:'محل تجاري', emoji:'🏪', color:'#EC4899' },
-  'local commercial': { label:'محل تجاري', emoji:'🏪', color:'#EC4899' },
-  'terrain': { label:'أرض', emoji:'📍', color:'#0EA5E9' },
-  'default': { label:'غير محدد', emoji:'🏠', color:'#94A3B8' }
+const PROP_META = {
+  'appartement': { color:'#3B82F6', emoji:'🏢', key:'prop_apart', rowBg:'rgba(59,130,246,0.08)', rowBorder:'#3B82F6' },
+  'villa':       { color:'#D4AF37', emoji:'🏰', key:'prop_villa', rowBg:'rgba(212,175,55,0.08)', rowBorder:'#D4AF37' },
+  'local comercial':  { color:'#F97316', emoji:'🏪', key:'prop_local', rowBg:'rgba(249,115,22,0.08)', rowBorder:'#F97316' },
+  'local commercial': { color:'#F97316', emoji:'🏪', key:'prop_local', rowBg:'rgba(249,115,22,0.08)', rowBorder:'#F97316' },
+  default: { color:'#64748B', emoji:'🏠', key:null, rowBg:'transparent', rowBorder:'transparent' }
 };
-const PAY_MAP = {
-  'cash': { label:'Cash', color:'#2563EB' },
-  'credit': { label:'Crédit', color:'#93C5FD' },
-  'default': { label:'—', color:'#94A3B8' }
+const PAY_META = {
+  cash:   { color:'#22C55E', emoji:'💵' },
+  credit: { color:'#EF4444', emoji:'💳' },
+  default:{ color:'#64748B', emoji:'—' }
 };
 
 const TIME_KEYS = ['all','today','yesterday','last_week','last_month'];
-const TIME_LABELS = {
-  ar:{all:'الكل',today:'اليوم',yesterday:'أمس',last_week:'الأسبوع الماضي',last_month:'الشهر الماضي'},
-  fr:{all:'Tout',today:"Aujourd'hui",yesterday:'Hier',last_week:'Semaine dernière',last_month:'Mois dernier'},
-  en:{all:'All',today:'Today',yesterday:'Yesterday',last_week:'Last week',last_month:'Last month'}
-};
-const STATUS_KEYS = ['all','vip','warm','cold','nouveau','en cours','vendu','perdu'];
+const CLASS_KEYS = ['all','vip','warm','cold'];
+const STATUS_KEYS = ['all','nouveau','en cours','vendu','perdu'];
+const PROPERTY_KEYS = ['all','appartement','villa','local commercial'];
 
 let ALL_DATA = [];
 let ACTIVE_TIME = 'all';
+let ACTIVE_CLASS = 'all';
 let ACTIVE_STATUS = 'all';
+let ACTIVE_PROPERTY = 'all';
 let ACTIVE_VIEW = 'dashboard';
 let charts = {};
 
@@ -283,7 +334,10 @@ let charts = {};
    أدوات مساعدة
    ============================================================ */
 function norm(s){ return (s||'').toString().toLowerCase().trim(); }
-function styleFor(map, v){ return map[norm(v)] || map['default']; }
+function metaFor(map, v){ return map[norm(v)] || map['default']; }
+function t(key){ return I18N[LANG][key] || key; }
+
+function labelFor(meta){ return meta.key ? t(meta.key) : '—'; }
 
 function parseDMY(str){
   if(!str) return null;
@@ -306,9 +360,9 @@ function isInTimeRange(dateStr, range){
   return true;
 }
 
-function badge(label, emoji, classes){
-  if(!label) return '<span class="text-slate-400">—</span>';
-  return `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border ${classes}">${emoji||''} ${label}</span>`;
+function badge(label, emoji, color){
+  if(!label || label==='—') return '<span class="text-slate-500">—</span>';
+  return `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border" style="background:${color}22; color:${color}; border-color:${color}55">${emoji||''} ${label}</span>`;
 }
 
 function initialsOf(name){
@@ -318,36 +372,56 @@ function initialsOf(name){
 }
 
 /* ============================================================
-   عرض الفلاتر
+   عرض مجموعات الفلاتر
    ============================================================ */
+function chipButton(key, active, label, emoji, color, dataAttr){
+  const style = active
+    ? `background:${color}22; border-color:${color}; color:${color}`
+    : `background:rgba(255,255,255,0.04); border-color:${'var(--border)'}; color:#CBD5E1`;
+  return `<button data-${dataAttr}="${key}" class="chip rounded-full px-3.5 py-2 text-[11px] font-bold border flex items-center gap-1.5" style="${style}">
+    ${emoji||''} ${label}</button>`;
+}
+
 function renderTimeChips(){
-  document.getElementById('timeChips').innerHTML = TIME_KEYS.map(k=>`
-    <button data-time="${k}" class="chip ${k===ACTIVE_TIME? 'text-white' : 'bg-white border'} rounded-full px-4 py-2 text-xs font-bold"
-      style="${k===ACTIVE_TIME ? 'background:var(--navy)' : 'border-color:var(--border); color:var(--navy-soft)'}">
-      ${TIME_LABELS[LANG][k]}
-    </button>`).join('');
+  document.getElementById('timeChips').innerHTML = TIME_KEYS.map(k=>{
+    const label = t('time_' + (k==='all'?'all': (k==='last_week'?'week': (k==='last_month'?'month':k))));
+    return chipButton(k, k===ACTIVE_TIME, label, '', '#F59E0B', 'time');
+  }).join('');
   document.querySelectorAll('#timeChips button').forEach(b=>{
     b.addEventListener('click', ()=>{ ACTIVE_TIME=b.dataset.time; renderTimeChips(); applyFilters(); });
   });
 }
 
+function renderClassChips(){
+  document.getElementById('classChips').innerHTML = CLASS_KEYS.map(k=>{
+    if(k==='all') return chipButton(k, ACTIVE_CLASS==='all', t('all_f'), '🔎', '#94A3B8', 'class');
+    const m = CLASS_META[k];
+    return chipButton(k, k===ACTIVE_CLASS, t(m.key), m.emoji, m.color, 'class');
+  }).join('');
+  document.querySelectorAll('#classChips button').forEach(b=>{
+    b.addEventListener('click', ()=>{ ACTIVE_CLASS=b.dataset.class; renderClassChips(); applyFilters(); });
+  });
+}
+
 function renderStatusChips(){
   document.getElementById('statusChips').innerHTML = STATUS_KEYS.map(k=>{
-    if (k==='all') {
-      const label = LANG==='ar'?'الكل':(LANG==='fr'?'Tout':'All');
-      const active = ACTIVE_STATUS==='all';
-      return `<button data-status="all" class="chip rounded-full px-3.5 py-2 text-[11px] font-bold border flex items-center gap-1.5"
-        style="${active ? 'background:var(--blue-light);border-color:var(--blue);color:var(--blue)' : 'background:#fff;border-color:var(--border);color:var(--navy-soft)'}">
-        <i class="fa-solid fa-layer-group text-[10px]"></i>${label}</button>`;
-    }
-    const meta = CLASS_MAP[k] || STATUS_MAP[k];
-    const active = k===ACTIVE_STATUS;
-    return `<button data-status="${k}" class="chip rounded-full px-3.5 py-2 text-[11px] font-bold border flex items-center gap-1.5"
-      style="${active ? `background:${meta.bg};border-color:${meta.color};color:${meta.color}` : 'background:#fff;border-color:var(--border);color:var(--navy-soft)'}">
-      ${meta.emoji} ${meta.label}</button>`;
+    if(k==='all') return chipButton(k, ACTIVE_STATUS==='all', t('all_f'), '🔎', '#94A3B8', 'status');
+    const m = STATUS_META[k];
+    return chipButton(k, k===ACTIVE_STATUS, t(m.key), m.emoji, m.color, 'status');
   }).join('');
   document.querySelectorAll('#statusChips button').forEach(b=>{
     b.addEventListener('click', ()=>{ ACTIVE_STATUS=b.dataset.status; renderStatusChips(); applyFilters(); });
+  });
+}
+
+function renderPropertyChips(){
+  document.getElementById('propertyChips').innerHTML = PROPERTY_KEYS.map(k=>{
+    if(k==='all') return chipButton(k, ACTIVE_PROPERTY==='all', t('all_f'), '🔎', '#94A3B8', 'property');
+    const m = PROP_META[k];
+    return chipButton(k, k===ACTIVE_PROPERTY, t(m.key), m.emoji, m.color, 'property');
+  }).join('');
+  document.querySelectorAll('#propertyChips button').forEach(b=>{
+    b.addEventListener('click', ()=>{ ACTIVE_PROPERTY=b.dataset.property; renderPropertyChips(); applyFilters(); });
   });
 }
 
@@ -355,7 +429,6 @@ function renderStatusChips(){
    الإحصائيات (شبكة بطاقات)
    ============================================================ */
 function renderStats(data){
-  const dict = I18N[LANG];
   document.getElementById('totalCount').textContent = data.length;
   document.getElementById('totalCard').classList.remove('hidden');
 
@@ -369,22 +442,22 @@ function renderStats(data){
   };
 
   const cards = [
-    { label: dict.apart, emoji:'🏢', value: counts.apart, bg:'#EFF6FF' },
-    { label: dict.villa, emoji:'🏰', value: counts.villa, bg:'#F5F3FF' },
-    { label: dict.local, emoji:'🏪', value: counts.local, bg:'#FDF2F8' },
-    { label: dict.vip,   emoji:'🔥', value: counts.vip,   bg:'#FFF7ED' },
-    { label: dict.warm,  emoji:'🪵', value: counts.warm,  bg:'#EFF6FF' },
-    { label: dict.cold,  emoji:'❄️', value: counts.cold,  bg:'#F0F9FF' },
+    { label: t('apart'), emoji: PROP_META['appartement'].emoji, value: counts.apart, color: PROP_META['appartement'].color },
+    { label: t('villa'), emoji: PROP_META['villa'].emoji, value: counts.villa, color: PROP_META['villa'].color },
+    { label: t('local'), emoji: PROP_META['local commercial'].emoji, value: counts.local, color: PROP_META['local commercial'].color },
+    { label: t(CLASS_META.vip.key), emoji: CLASS_META.vip.emoji, value: counts.vip, color: CLASS_META.vip.color },
+    { label: t(CLASS_META.warm.key), emoji: CLASS_META.warm.emoji, value: counts.warm, color: CLASS_META.warm.color },
+    { label: t(CLASS_META.cold.key), emoji: CLASS_META.cold.emoji, value: counts.cold, color: CLASS_META.cold.color },
   ];
 
   const grid = document.getElementById('statsGrid');
   grid.classList.remove('hidden');
   grid.innerHTML = cards.map(c=>`
-    <div class="card rounded-2xl p-4 flex items-center justify-between fade-in">
-      <div class="icon-circle" style="background:${c.bg}">${c.emoji}</div>
+    <div class="glass rounded-2xl p-4 flex items-center justify-between fade-in">
+      <div class="icon-circle" style="background:${c.color}22">${c.emoji}</div>
       <div class="text-right">
-        <p class="text-[11px] font-semibold mb-0.5" style="color:var(--gray)">${c.label}</p>
-        <p class="text-2xl font-black" style="color:var(--navy)">${c.value}</p>
+        <p class="text-[11px] font-semibold mb-0.5 text-slate-400">${c.label}</p>
+        <p class="text-2xl font-black text-white">${c.value}</p>
       </div>
     </div>`).join('');
 }
@@ -396,12 +469,11 @@ function buildDonut(canvasId, labels, values, colors){
   const ctx = document.getElementById(canvasId);
   if(!ctx) return;
   if(charts[canvasId]) charts[canvasId].destroy();
-
   const total = values.reduce((a,b)=>a+b,0) || 1;
 
   charts[canvasId] = new Chart(ctx, {
     type:'doughnut',
-    data:{ labels, datasets:[{ data:values, backgroundColor:colors, borderColor:'#FFFFFF', borderWidth:3, hoverOffset:8 }] },
+    data:{ labels, datasets:[{ data:values, backgroundColor:colors, borderColor:'#0F1420', borderWidth:3, hoverOffset:8 }] },
     plugins: [ChartDataLabels],
     options:{
       responsive:true, maintainAspectRatio:false, cutout:'58%',
@@ -421,8 +493,8 @@ function renderLegend(containerId, entries){
   document.getElementById(containerId).innerHTML = entries.map(e=>{
     const pct = Math.round((e.value/total)*100);
     return `<div class="flex items-center justify-between text-xs">
-      <span style="color:var(--gray)">(${pct}%) ${e.value}</span>
-      <span class="flex items-center gap-2 font-medium" style="color:var(--navy)">${e.label} <span class="w-2.5 h-2.5 rounded-full" style="background:${e.color}"></span></span>
+      <span class="text-slate-400">(${pct}%) ${e.value}</span>
+      <span class="flex items-center gap-2 font-medium text-slate-100">${e.label} <span class="w-2.5 h-2.5 rounded-full" style="background:${e.color}"></span></span>
     </div>`;
   }).join('');
 }
@@ -432,35 +504,35 @@ function renderCharts(data){
 
   const clsCounts = {};
   data.forEach(d=>{ const k=norm(d.classification)||'default'; clsCounts[k]=(clsCounts[k]||0)+1; });
-  let clsEntries = Object.keys(clsCounts).map(k=>({ value:clsCounts[k], label:(CLASS_MAP[k]||CLASS_MAP.default).label, color:(CLASS_MAP[k]||CLASS_MAP.default).color }));
-  if(!clsEntries.length) clsEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  let clsEntries = Object.keys(clsCounts).map(k=>({ value:clsCounts[k], label: labelFor(CLASS_META[k]||CLASS_META.default), color:(CLASS_META[k]||CLASS_META.default).color }));
+  if(!clsEntries.length) clsEntries=[{value:1,label:t('empty'),color:'#334155'}];
   buildDonut('chartClassification', clsEntries.map(e=>e.label), clsEntries.map(e=>e.value), clsEntries.map(e=>e.color));
   renderLegend('legendClassification', clsEntries);
 
   const payCounts = {};
   data.forEach(d=>{ const k=norm(d.payment)||'default'; payCounts[k]=(payCounts[k]||0)+1; });
-  let payEntries = Object.keys(payCounts).map(k=>({ value:payCounts[k], label:(PAY_MAP[k]||PAY_MAP.default).label, color:(PAY_MAP[k]||PAY_MAP.default).color }));
-  if(!payEntries.length) payEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  let payEntries = Object.keys(payCounts).map(k=>({ value:payCounts[k], label:(k==='cash'?'Cash':k==='credit'?'Crédit':'—'), color:(PAY_META[k]||PAY_META.default).color }));
+  if(!payEntries.length) payEntries=[{value:1,label:t('empty'),color:'#334155'}];
   buildDonut('chartPayment', payEntries.map(e=>e.label), payEntries.map(e=>e.value), payEntries.map(e=>e.color));
   renderLegend('legendPayment', payEntries);
 
   const propCounts = {};
   data.forEach(d=>{ const k=norm(d.propertyType)||'default'; propCounts[k]=(propCounts[k]||0)+1; });
-  let propEntries = Object.keys(propCounts).map(k=>({ value:propCounts[k], label:(PROP_MAP[k]||PROP_MAP.default).label, color:(PROP_MAP[k]||PROP_MAP.default).color }));
-  if(!propEntries.length) propEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  let propEntries = Object.keys(propCounts).map(k=>({ value:propCounts[k], label: labelFor(PROP_META[k]||PROP_META.default), color:(PROP_META[k]||PROP_META.default).color }));
+  if(!propEntries.length) propEntries=[{value:1,label:t('empty'),color:'#334155'}];
   buildDonut('chartPropertyType', propEntries.map(e=>e.label), propEntries.map(e=>e.value), propEntries.map(e=>e.color));
   renderLegend('legendPropertyType', propEntries);
 
   const statCounts = {};
   data.forEach(d=>{ const k=norm(d.status)||'default'; statCounts[k]=(statCounts[k]||0)+1; });
-  let statEntries = Object.keys(statCounts).map(k=>({ value:statCounts[k], label:(STATUS_MAP[k]||STATUS_MAP.default).label, color:(STATUS_MAP[k]||STATUS_MAP.default).color }));
-  if(!statEntries.length) statEntries=[{value:1,label:'لا توجد بيانات',color:'#E2E8F5'}];
+  let statEntries = Object.keys(statCounts).map(k=>({ value:statCounts[k], label: labelFor(STATUS_META[k]||STATUS_META.default), color:(STATUS_META[k]||STATUS_META.default).color }));
+  if(!statEntries.length) statEntries=[{value:1,label:t('empty'),color:'#334155'}];
   buildDonut('chartStatus', statEntries.map(e=>e.label), statEntries.map(e=>e.value), statEntries.map(e=>e.color));
   renderLegend('legendStatus', statEntries);
 }
 
 /* ============================================================
-   جدول العملاء
+   جدول العملاء (تلوين السطر حسب نوع العقار)
    ============================================================ */
 function renderTable(data){
   const wrap = document.getElementById('tableWrap');
@@ -475,77 +547,150 @@ function renderTable(data){
   wrap.classList.remove('hidden');
 
   document.getElementById('tableBody').innerHTML = data.map(d=>{
-    const prop = styleFor(PROP_MAP, d.propertyType);
-    const stat = styleFor(STATUS_MAP, d.status);
-    const cls  = styleFor(CLASS_MAP, d.classification);
-    return `<tr class="fade-in">
+    const prop = metaFor(PROP_META, d.propertyType);
+    const stat = metaFor(STATUS_META, d.status);
+    const cls  = metaFor(CLASS_META, d.classification);
+    const propLabel = labelFor(prop);
+    const statLabel = labelFor(stat);
+    const clsLabel = cls.key ? t(cls.key) : '—';
+
+    return `<tr class="fade-in" style="background:${prop.rowBg}; border-right:3px solid ${prop.rowBorder}">
       <td class="px-4 py-3 whitespace-nowrap">
         <div class="flex items-center gap-2">
           <div class="avatar-circle" style="background:${prop.color}">${initialsOf(d.name)}</div>
-          <span class="font-semibold" style="color:var(--navy)">${d.name||'—'}</span>
+          <span class="font-semibold text-slate-100">${d.name||'—'}</span>
         </div>
       </td>
-      <td class="px-4 py-3 whitespace-nowrap" style="color:var(--gray)" dir="ltr">${d.phone||'—'}</td>
-      <td class="px-4 py-3 whitespace-nowrap" style="color:var(--navy-soft)">${d.budget||'—'}</td>
-      <td class="px-4 py-3 whitespace-nowrap">${prop.emoji} ${prop.label}</td>
-      <td class="px-4 py-3 whitespace-nowrap">${badge(stat.label, stat.emoji, stat.classes)}</td>
-      <td class="px-4 py-3 whitespace-nowrap">${badge(cls.label, cls.emoji, cls.classes)}</td>
+      <td class="px-4 py-3 whitespace-nowrap text-slate-400" dir="ltr">${d.phone||'—'}</td>
+      <td class="px-4 py-3 whitespace-nowrap text-slate-300">${d.budget||'—'}</td>
+      <td class="px-4 py-3 whitespace-nowrap text-slate-200">${prop.emoji} ${propLabel}</td>
+      <td class="px-4 py-3 whitespace-nowrap">${badge(statLabel, stat.emoji, stat.color)}</td>
+      <td class="px-4 py-3 whitespace-nowrap">${badge(clsLabel, cls.emoji, cls.color)}</td>
     </tr>`;
   }).join('');
 }
 
 /* ============================================================
-   التقرير الشهري المفصل
+   جدول التقرير الشهري المقارن (30 يوم حالية vs 30 يوم سابقة)
    ============================================================ */
-function renderReport(data){
-  const dict = I18N[LANG];
+function inWindow(dateStr, fromDate, toDate){
+  const d = parseDMY(dateStr);
+  if(!d) return false;
+  return d >= fromDate && d <= toDate;
+}
+
+function computeMetrics(rows){
+  return {
+    total: rows.length,
+    apart: rows.filter(d=>norm(d.propertyType)==='appartement').length,
+    villa: rows.filter(d=>norm(d.propertyType)==='villa').length,
+    local: rows.filter(d=>norm(d.propertyType).includes('local')).length,
+    vip: rows.filter(d=>norm(d.classification)==='vip').length,
+    warm: rows.filter(d=>norm(d.classification)==='warm').length,
+    cold: rows.filter(d=>norm(d.classification)==='cold').length,
+    vendu: rows.filter(d=>norm(d.status)==='vendu').length,
+    perdu: rows.filter(d=>norm(d.status)==='perdu').length,
+  };
+}
+
+function pctChange(curr, prev){
+  if(prev === 0) return curr === 0 ? 0 : 100;
+  return Math.round(((curr - prev) / prev) * 100);
+}
+
+function renderMonthlyReport(baseData){
+  const now = new Date();
+  const today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const start30 = new Date(today0); start30.setDate(start30.getDate() - 30);
+  const start60 = new Date(today0); start60.setDate(start60.getDate() - 60);
+
+  const currentRows = baseData.filter(d => inWindow(d.date, start30, today0));
+  const previousRows = baseData.filter(d => inWindow(d.date, start60, start30));
+
+  const curr = computeMetrics(currentRows);
+  const prev = computeMetrics(previousRows);
+
   const rows = [
-    { label: dict.total, emoji:'👥', value: data.length },
-    { label: dict.apart, emoji:'🏢', value: data.filter(d=>norm(d.propertyType)==='appartement').length },
-    { label: dict.villa, emoji:'🏰', value: data.filter(d=>norm(d.propertyType)==='villa').length },
-    { label: dict.local, emoji:'🏪', value: data.filter(d=>norm(d.propertyType).includes('local')).length },
-    { label: dict.vip,   emoji:'🔥', value: data.filter(d=>norm(d.classification)==='vip').length },
-    { label: dict.warm,  emoji:'🪵', value: data.filter(d=>norm(d.classification)==='warm').length },
-    { label: dict.cold,  emoji:'❄️', value: data.filter(d=>norm(d.classification)==='cold').length },
+    { label: t('total'), emoji:'👥', c: curr.total, p: prev.total },
+    { label: t('apart'), emoji: PROP_META['appartement'].emoji, c: curr.apart, p: prev.apart },
+    { label: t('villa'), emoji: PROP_META['villa'].emoji, c: curr.villa, p: prev.villa },
+    { label: t('local'), emoji: PROP_META['local commercial'].emoji, c: curr.local, p: prev.local },
+    { label: t(CLASS_META.vip.key), emoji: CLASS_META.vip.emoji, c: curr.vip, p: prev.vip },
+    { label: t(CLASS_META.warm.key), emoji: CLASS_META.warm.emoji, c: curr.warm, p: prev.warm },
+    { label: t(CLASS_META.cold.key), emoji: CLASS_META.cold.emoji, c: curr.cold, p: prev.cold },
+    { label: t(STATUS_META.vendu.key), emoji: STATUS_META.vendu.emoji, c: curr.vendu, p: prev.vendu },
+    { label: t(STATUS_META.perdu.key), emoji: STATUS_META.perdu.emoji, c: curr.perdu, p: prev.perdu },
   ];
-  document.getElementById('reportBody').innerHTML = rows.map(r=>`
-    <tr>
-      <td class="px-5 py-3 flex items-center gap-2" style="color:var(--navy)">${r.emoji} ${r.label}</td>
-      <td class="px-5 py-3 font-bold" style="color:var(--blue)">${r.value}</td>
-    </tr>`).join('');
+
+  document.getElementById('reportBody').innerHTML = rows.map(r=>{
+    const change = pctChange(r.c, r.p);
+    const up = change > 0;
+    const flat = change === 0;
+    const color = flat ? '#94A3B8' : (up ? '#22C55E' : '#EF4444');
+    const arrow = flat ? '→' : (up ? '↑' : '↓');
+    return `<tr>
+      <td class="px-4 py-3 flex items-center gap-2 text-slate-200 whitespace-nowrap">${r.emoji} ${r.label}</td>
+      <td class="px-3 py-3 text-center font-bold text-white">${r.c}</td>
+      <td class="px-3 py-3 text-center text-slate-400">${r.p}</td>
+      <td class="px-3 py-3 text-center font-bold" style="color:${color}">${arrow} ${Math.abs(change)}%</td>
+    </tr>`;
+  }).join('');
 }
 
 /* ============================================================
    الفلترة العامة
    ============================================================ */
-function applyFilters(){
+function getFilteredData(){
   const q = norm(document.getElementById('searchInput').value);
   let filtered = ALL_DATA.filter(d=>isInTimeRange(d.date, ACTIVE_TIME));
+
+  if(ACTIVE_CLASS!=='all'){
+    filtered = filtered.filter(d=>norm(d.classification)===ACTIVE_CLASS);
+  }
   if(ACTIVE_STATUS!=='all'){
-    filtered = filtered.filter(d=>norm(d.classification)===ACTIVE_STATUS || norm(d.status)===ACTIVE_STATUS);
+    filtered = filtered.filter(d=>norm(d.status)===ACTIVE_STATUS);
+  }
+  if(ACTIVE_PROPERTY!=='all'){
+    filtered = filtered.filter(d=>norm(d.propertyType)===ACTIVE_PROPERTY || (ACTIVE_PROPERTY.includes('local') && norm(d.propertyType).includes('local')));
   }
   if(q){
     filtered = filtered.filter(d=>norm(d.name).includes(q) || norm(d.phone).includes(q));
   }
+  return filtered;
+}
+
+function applyFilters(){
+  const filtered = getFilteredData();
   renderStats(filtered);
   renderCharts(filtered);
   renderTable(filtered);
-  renderReport(filtered);
+  renderMonthlyReport(ALL_DATA); // التقرير الشهري يقارن دائماً على كامل القاعدة الزمنية الصحيحة
 }
 
 /* ============================================================
-   اللغة
+   اللغة — تبديل شامل للواجهة
    ============================================================ */
 function applyLanguage(lang){
   LANG = lang;
   const dict = I18N[lang];
   document.getElementById('htmlRoot').setAttribute('lang', lang);
   document.getElementById('htmlRoot').setAttribute('dir', dict.dir);
+
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key]) el.textContent = dict[key];
+  });
+
+  document.getElementById('mainTitle').innerHTML = `<span>📊</span><span>${dict.title}</span>`;
+  document.getElementById('subTitle').textContent = dict.subtitle;
   document.getElementById('errorText').textContent = dict.err;
   document.getElementById('emptyStateText').textContent = dict.empty;
   document.getElementById('searchInput').setAttribute('placeholder', dict.search);
+
   renderTimeChips();
+  renderClassChips();
   renderStatusChips();
+  renderPropertyChips();
   applyFilters();
 }
 
@@ -573,26 +718,22 @@ async function loadData(){
   try{
     const url = WEB_APP_URL + (WEB_APP_URL.includes('?') ? '&' : '?') + 'action=getData';
     const res = await fetch(url, { method:'GET', redirect:'follow' });
-
-    if(!res.ok) throw new Error('فشل الاتصال بالخادم (HTTP ' + res.status + ')');
+    if(!res.ok) throw new Error('HTTP ' + res.status);
 
     const json = await res.json();
-
     let rows = [];
-    if (Array.isArray(json)) {
-      rows = json;
-    } else if (json && json.success === false) {
-      throw new Error(json.error || 'خطأ غير معروف من الخادم.');
-    } else if (json && Array.isArray(json.data)) {
-      rows = json.data;
-    }
+    if (Array.isArray(json)) rows = json;
+    else if (json && json.success === false) throw new Error(json.error || 'خطأ غير معروف');
+    else if (json && Array.isArray(json.data)) rows = json.data;
 
     ALL_DATA = rows;
 
     if (!ALL_DATA.length) {
       errorBanner.classList.remove('hidden');
       document.getElementById('errorText').textContent =
-        'تم الاتصال بالخادم بنجاح، لكن لم يتم العثور على أي بيانات في ورقة "Database".';
+        LANG==='ar' ? 'تم الاتصال بنجاح لكن لم يتم العثور على بيانات في ورقة "Database".' :
+        LANG==='fr' ? 'Connexion réussie mais aucune donnée trouvée dans "Database".' :
+        'Connected successfully but no data found in "Database".';
     }
 
     applyFilters();
@@ -609,7 +750,9 @@ async function loadData(){
 
 document.addEventListener('DOMContentLoaded', function(){
   renderTimeChips();
+  renderClassChips();
   renderStatusChips();
+  renderPropertyChips();
   loadData();
 
   document.getElementById('searchInput').addEventListener('input', applyFilters);
