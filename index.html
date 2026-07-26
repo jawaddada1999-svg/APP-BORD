@@ -283,7 +283,7 @@ let LANG = 'ar';
 
 /* ============================================================
    خرائط الألوان
-   VIP أخضر / WARM برتقالي / COLD أحمر
+   VIP أخضر🔥 / WARM برتقالي🪵 / COLD أحمر❄️
    ============================================================ */
 const CLASS_META = {
   vip:  { color:'#16A34A', bgCard:'#ECFDF5', emoji:'🔥', key:'class_vip' },
@@ -292,18 +292,16 @@ const CLASS_META = {
   default: { color:'#94A3B8', bgCard:'#F8FAFC', emoji:'—', key:null }
 };
 const STATUS_META = {
-  'nouveau':  { color:'#2563EB', emoji:'🆕', key:'status_nouveau' },
-  'en cours': { color:'#92400E', emoji:'⏳', key:'status_encours' },
-  'vendu':    { color:'#16A34A', emoji:'✅', key:'status_vendu' },
-  'perdu':    { color:'#DC2626', emoji:'❌', key:'status_perdu' },
-  default:    { color:'#94A3B8', emoji:'—', key:null }
+  nouveau:  { color:'#2563EB', emoji:'🆕', key:'status_nouveau' },
+  encours:  { color:'#92400E', emoji:'⏳', key:'status_encours' },
+  vendu:    { color:'#16A34A', emoji:'✅', key:'status_vendu' },
+  perdu:    { color:'#DC2626', emoji:'❌', key:'status_perdu' },
+  default:  { color:'#94A3B8', emoji:'—', key:null }
 };
-// ألوان هادئة ومتناسقة لتلوين صفوف الجداول حسب نوع العقار
 const PROP_META = {
-  'appartement': { color:'#2563EB', bgCard:'#EFF6FF', emoji:'🏢', key:'prop_apart', rowBg:'#EFF6FF', rowBorder:'#93C5FD' },
-  'villa':       { color:'#B8860B', bgCard:'#FEF9E7', emoji:'🏰', key:'prop_villa', rowBg:'#FEF9E7', rowBorder:'#E5C158' },
-  'local comercial':  { color:'#EA580C', bgCard:'#FFF3E9', emoji:'🏪', key:'prop_local', rowBg:'#FFF3E9', rowBorder:'#F5B27A' },
-  'local commercial': { color:'#EA580C', bgCard:'#FFF3E9', emoji:'🏪', key:'prop_local', rowBg:'#FFF3E9', rowBorder:'#F5B27A' },
+  appartement: { color:'#2563EB', bgCard:'#EFF6FF', emoji:'🏢', key:'prop_apart', rowBg:'#EFF6FF', rowBorder:'#93C5FD' },
+  villa:       { color:'#B8860B', bgCard:'#FEF9E7', emoji:'🏰', key:'prop_villa', rowBg:'#FEF9E7', rowBorder:'#E5C158' },
+  local:       { color:'#EA580C', bgCard:'#FFF3E9', emoji:'🏪', key:'prop_local', rowBg:'#FFF3E9', rowBorder:'#F5B27A' },
   default: { color:'#94A3B8', bgCard:'#F8FAFC', emoji:'🏠', key:null, rowBg:'#FFFFFF', rowBorder:'transparent' }
 };
 const PAY_META = {
@@ -314,7 +312,7 @@ const PAY_META = {
 
 const TIME_KEYS = ['all','today','yesterday','last_week','last_month'];
 const CLASS_KEYS = ['all','vip','warm','cold'];
-const PROPERTY_KEYS = ['all','appartement','villa','local commercial'];
+const PROPERTY_KEYS = ['all','appartement','villa','local'];
 
 let ALL_DATA = [];
 let ACTIVE_TIME = 'all';
@@ -324,11 +322,51 @@ let ACTIVE_VIEW = 'dashboard';
 let charts = {};
 
 /* ============================================================
-   أدوات مساعدة
+   ⭐ أدوات التطبيع القوية — الحل النهائي لمشكلة WARM/COLD = 0
+   ⭐ تشيل الإيموجي، الأرقام، الرموز، المسافات، وتحول الأحرف
+   ⭐ الكبيرة لصغيرة، وتشيل حتى اللكنات (é -> e) قبل المقارنة
    ============================================================ */
-// normalize كاملة: lowercase + trim، يضمن قراءة VIP/vip/Vip بنفس الشكل
-function norm(s){ return (s||'').toString().trim().toLowerCase(); }
-function metaFor(map, v){ return map[norm(v)] || map['default']; }
+function cleanAlpha(raw){
+  if(!raw) return '';
+  return raw.toString()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // é -> e, à -> a ...
+    .toLowerCase()
+    .replace(/[^a-z]/g, ''); // يبقي فقط الحروف اللاتينية الصغيرة
+}
+
+// يرجع المفتاح الصحيح (vip/warm/cold) بغض النظر عن الشكل الأصلي فالخانة
+function classKeyFor(raw){
+  const s = cleanAlpha(raw);
+  if(s.includes('vip')) return 'vip';
+  if(s.includes('warm')) return 'warm';
+  if(s.includes('cold')) return 'cold';
+  return 'default';
+}
+
+function statusKeyFor(raw){
+  const s = cleanAlpha(raw);
+  if(s.includes('nouveau') || s.includes('new')) return 'nouveau';
+  if(s.includes('encours') || s.includes('progress')) return 'encours';
+  if(s.includes('vendu') || s.includes('sold')) return 'vendu';
+  if(s.includes('perdu') || s.includes('lost')) return 'perdu';
+  return 'default';
+}
+
+function propertyKeyFor(raw){
+  const s = cleanAlpha(raw);
+  if(s.includes('appartement') || s.includes('apartment')) return 'appartement';
+  if(s.includes('villa')) return 'villa';
+  if(s.includes('local')) return 'local';
+  return 'default';
+}
+
+function paymentKeyFor(raw){
+  const s = cleanAlpha(raw);
+  if(s.includes('cash')) return 'cash';
+  if(s.includes('credit')) return 'credit';
+  return 'default';
+}
+
 function t(key){ return I18N[LANG][key] || key; }
 function labelFor(meta){ return meta.key ? t(meta.key) : '—'; }
 
@@ -365,7 +403,7 @@ function initialsOf(name){
 }
 
 /* ============================================================
-   بناء قوائم الفلاتر (بلا فلتر الحالة)
+   بناء قوائم الفلاتر
    ============================================================ */
 function fillSelect(selectEl, keys, labelFn, currentValue){
   selectEl.innerHTML = keys.map(k => `<option value="${k}">${labelFn(k)}</option>`).join('');
@@ -393,25 +431,25 @@ function renderAllSelects(){
 }
 
 /* ============================================================
-   الإحصائيات (شبكة بطاقات)
+   الإحصائيات
    ============================================================ */
 function renderStats(data){
   document.getElementById('totalCount').textContent = data.length;
   document.getElementById('totalCard').classList.remove('hidden');
 
   const counts = {
-    apart: data.filter(d=>norm(d.propertyType)==='appartement').length,
-    villa: data.filter(d=>norm(d.propertyType)==='villa').length,
-    local: data.filter(d=>norm(d.propertyType).includes('local')).length,
-    vip: data.filter(d=>norm(d.classification)==='vip').length,
-    warm: data.filter(d=>norm(d.classification)==='warm').length,
-    cold: data.filter(d=>norm(d.classification)==='cold').length,
+    apart: data.filter(d=>propertyKeyFor(d.propertyType)==='appartement').length,
+    villa: data.filter(d=>propertyKeyFor(d.propertyType)==='villa').length,
+    local: data.filter(d=>propertyKeyFor(d.propertyType)==='local').length,
+    vip: data.filter(d=>classKeyFor(d.classification)==='vip').length,
+    warm: data.filter(d=>classKeyFor(d.classification)==='warm').length,
+    cold: data.filter(d=>classKeyFor(d.classification)==='cold').length,
   };
 
   const cards = [
-    { label: t('apart'), emoji: PROP_META['appartement'].emoji, value: counts.apart, color: PROP_META['appartement'].color, bg: PROP_META['appartement'].bgCard },
-    { label: t('villa'), emoji: PROP_META['villa'].emoji, value: counts.villa, color: PROP_META['villa'].color, bg: PROP_META['villa'].bgCard },
-    { label: t('local'), emoji: PROP_META['local commercial'].emoji, value: counts.local, color: PROP_META['local commercial'].color, bg: PROP_META['local commercial'].bgCard },
+    { label: t('apart'), emoji: PROP_META.appartement.emoji, value: counts.apart, color: PROP_META.appartement.color, bg: PROP_META.appartement.bgCard },
+    { label: t('villa'), emoji: PROP_META.villa.emoji, value: counts.villa, color: PROP_META.villa.color, bg: PROP_META.villa.bgCard },
+    { label: t('local'), emoji: PROP_META.local.emoji, value: counts.local, color: PROP_META.local.color, bg: PROP_META.local.bgCard },
     { label: t(CLASS_META.vip.key), emoji: CLASS_META.vip.emoji, value: counts.vip, color: CLASS_META.vip.color, bg: CLASS_META.vip.bgCard },
     { label: t(CLASS_META.warm.key), emoji: CLASS_META.warm.emoji, value: counts.warm, color: CLASS_META.warm.color, bg: CLASS_META.warm.bgCard },
     { label: t(CLASS_META.cold.key), emoji: CLASS_META.cold.emoji, value: counts.cold, color: CLASS_META.cold.color, bg: CLASS_META.cold.bgCard },
@@ -430,7 +468,7 @@ function renderStats(data){
 }
 
 /* ============================================================
-   الرسوم البيانية (بلا مبيان الحالات)
+   الرسوم البيانية
    ============================================================ */
 function buildDonut(canvasId, labels, values, colors){
   const ctx = document.getElementById(canvasId);
@@ -469,23 +507,23 @@ function renderLegend(containerId, entries){
 function renderCharts(data){
   document.getElementById('chartsWrap').classList.remove('hidden');
 
-  // التصنيف — norm() يضمن قراءة VIP/vip/Vip/WARM/warm/Cold/COLD بنفس الشكل
+  // التصنيف — classKeyFor() هو الحل النهائي لمشكلة WARM/COLD = 0
   const clsCounts = {};
-  data.forEach(d=>{ const k=norm(d.classification)||'default'; clsCounts[k]=(clsCounts[k]||0)+1; });
-  let clsEntries = Object.keys(clsCounts).map(k=>({ value:clsCounts[k], label: labelFor(CLASS_META[k]||CLASS_META.default), color:(CLASS_META[k]||CLASS_META.default).color }));
+  data.forEach(d=>{ const k=classKeyFor(d.classification); clsCounts[k]=(clsCounts[k]||0)+1; });
+  let clsEntries = Object.keys(clsCounts).filter(k=>k!=='default'||clsCounts.default).map(k=>({ value:clsCounts[k], label: labelFor(CLASS_META[k]||CLASS_META.default), color:(CLASS_META[k]||CLASS_META.default).color }));
   if(!clsEntries.length) clsEntries=[{value:1,label:t('empty'),color:'#E2E8F5'}];
   buildDonut('chartClassification', clsEntries.map(e=>e.label), clsEntries.map(e=>e.value), clsEntries.map(e=>e.color));
   renderLegend('legendClassification', clsEntries);
 
   const payCounts = {};
-  data.forEach(d=>{ const k=norm(d.payment)||'default'; payCounts[k]=(payCounts[k]||0)+1; });
+  data.forEach(d=>{ const k=paymentKeyFor(d.payment); payCounts[k]=(payCounts[k]||0)+1; });
   let payEntries = Object.keys(payCounts).map(k=>({ value:payCounts[k], label:(k==='cash'?'Cash':k==='credit'?'Crédit':'—'), color:(PAY_META[k]||PAY_META.default).color }));
   if(!payEntries.length) payEntries=[{value:1,label:t('empty'),color:'#E2E8F5'}];
   buildDonut('chartPayment', payEntries.map(e=>e.label), payEntries.map(e=>e.value), payEntries.map(e=>e.color));
   renderLegend('legendPayment', payEntries);
 
   const propCounts = {};
-  data.forEach(d=>{ const k=norm(d.propertyType)||'default'; propCounts[k]=(propCounts[k]||0)+1; });
+  data.forEach(d=>{ const k=propertyKeyFor(d.propertyType); propCounts[k]=(propCounts[k]||0)+1; });
   let propEntries = Object.keys(propCounts).map(k=>({ value:propCounts[k], label: labelFor(PROP_META[k]||PROP_META.default), color:(PROP_META[k]||PROP_META.default).color }));
   if(!propEntries.length) propEntries=[{value:1,label:t('empty'),color:'#E2E8F5'}];
   buildDonut('chartPropertyType', propEntries.map(e=>e.label), propEntries.map(e=>e.value), propEntries.map(e=>e.color));
@@ -493,7 +531,7 @@ function renderCharts(data){
 }
 
 /* ============================================================
-   جدول العملاء — الصف ملون حسب نوع العقار
+   جدول العملاء
    ============================================================ */
 function renderTable(data){
   const wrap = document.getElementById('tableWrap');
@@ -508,9 +546,12 @@ function renderTable(data){
   wrap.classList.remove('hidden');
 
   document.getElementById('tableBody').innerHTML = data.map(d=>{
-    const prop = metaFor(PROP_META, d.propertyType);
-    const stat = metaFor(STATUS_META, d.status);
-    const cls  = metaFor(CLASS_META, d.classification);
+    const propKey = propertyKeyFor(d.propertyType);
+    const statKey = statusKeyFor(d.status);
+    const clsKey  = classKeyFor(d.classification);
+    const prop = PROP_META[propKey] || PROP_META.default;
+    const stat = STATUS_META[statKey] || STATUS_META.default;
+    const cls  = CLASS_META[clsKey] || CLASS_META.default;
     const propLabel = labelFor(prop);
     const statLabel = labelFor(stat);
     const clsLabel = cls.key ? t(cls.key) : '—';
@@ -532,7 +573,7 @@ function renderTable(data){
 }
 
 /* ============================================================
-   جدول التقرير الشهري — الصفوف الخاصة بنوع العقار ملونة بنفس النظام
+   جدول التقرير الشهري المقارن
    ============================================================ */
 function inWindow(dateStr, fromDate, toDate){
   const d = parseDMY(dateStr);
@@ -543,14 +584,14 @@ function inWindow(dateStr, fromDate, toDate){
 function computeMetrics(rows){
   return {
     total: rows.length,
-    apart: rows.filter(d=>norm(d.propertyType)==='appartement').length,
-    villa: rows.filter(d=>norm(d.propertyType)==='villa').length,
-    local: rows.filter(d=>norm(d.propertyType).includes('local')).length,
-    vip: rows.filter(d=>norm(d.classification)==='vip').length,
-    warm: rows.filter(d=>norm(d.classification)==='warm').length,
-    cold: rows.filter(d=>norm(d.classification)==='cold').length,
-    vendu: rows.filter(d=>norm(d.status)==='vendu').length,
-    perdu: rows.filter(d=>norm(d.status)==='perdu').length,
+    apart: rows.filter(d=>propertyKeyFor(d.propertyType)==='appartement').length,
+    villa: rows.filter(d=>propertyKeyFor(d.propertyType)==='villa').length,
+    local: rows.filter(d=>propertyKeyFor(d.propertyType)==='local').length,
+    vip: rows.filter(d=>classKeyFor(d.classification)==='vip').length,
+    warm: rows.filter(d=>classKeyFor(d.classification)==='warm').length,
+    cold: rows.filter(d=>classKeyFor(d.classification)==='cold').length,
+    vendu: rows.filter(d=>statusKeyFor(d.status)==='vendu').length,
+    perdu: rows.filter(d=>statusKeyFor(d.status)==='perdu').length,
   };
 }
 
@@ -571,12 +612,11 @@ function renderMonthlyReport(baseData){
   const curr = computeMetrics(currentRows);
   const prev = computeMetrics(previousRows);
 
-  // كل صف عندو معرّف نوع عقار اختياري (propKey) باش يتلون بنفس نظام PROP_META
   const rows = [
     { label: t('total'), emoji:'👥', c: curr.total, p: prev.total, propKey: null },
-    { label: t('apart'), emoji: PROP_META['appartement'].emoji, c: curr.apart, p: prev.apart, propKey: 'appartement' },
-    { label: t('villa'), emoji: PROP_META['villa'].emoji, c: curr.villa, p: prev.villa, propKey: 'villa' },
-    { label: t('local'), emoji: PROP_META['local commercial'].emoji, c: curr.local, p: prev.local, propKey: 'local commercial' },
+    { label: t('apart'), emoji: PROP_META.appartement.emoji, c: curr.apart, p: prev.apart, propKey: 'appartement' },
+    { label: t('villa'), emoji: PROP_META.villa.emoji, c: curr.villa, p: prev.villa, propKey: 'villa' },
+    { label: t('local'), emoji: PROP_META.local.emoji, c: curr.local, p: prev.local, propKey: 'local' },
     { label: t(CLASS_META.vip.key), emoji: CLASS_META.vip.emoji, c: curr.vip, p: prev.vip, propKey: null },
     { label: t(CLASS_META.warm.key), emoji: CLASS_META.warm.emoji, c: curr.warm, p: prev.warm, propKey: null },
     { label: t(CLASS_META.cold.key), emoji: CLASS_META.cold.emoji, c: curr.cold, p: prev.cold, propKey: null },
@@ -590,7 +630,7 @@ function renderMonthlyReport(baseData){
     const flat = change === 0;
     const color = flat ? '#94A3B8' : (up ? '#16A34A' : '#DC2626');
     const arrow = flat ? '→' : (up ? '↑' : '↓');
-    const prop = r.propKey ? metaFor(PROP_META, r.propKey) : null;
+    const prop = r.propKey ? (PROP_META[r.propKey] || PROP_META.default) : null;
     const rowStyle = prop ? `background:${prop.rowBg}; border-right:4px solid ${prop.rowBorder}` : '';
 
     return `<tr style="${rowStyle}">
@@ -603,20 +643,20 @@ function renderMonthlyReport(baseData){
 }
 
 /* ============================================================
-   الفلترة العامة (بلا فلتر الحالة)
+   الفلترة العامة
    ============================================================ */
 function getFilteredData(){
-  const q = norm(document.getElementById('searchInput').value);
+  const q = cleanAlpha(document.getElementById('searchInput').value) ? document.getElementById('searchInput').value.toLowerCase().trim() : '';
   let filtered = ALL_DATA.filter(d=>isInTimeRange(d.date, ACTIVE_TIME));
 
   if(ACTIVE_CLASS!=='all'){
-    filtered = filtered.filter(d=>norm(d.classification)===ACTIVE_CLASS);
+    filtered = filtered.filter(d=>classKeyFor(d.classification)===ACTIVE_CLASS);
   }
   if(ACTIVE_PROPERTY!=='all'){
-    filtered = filtered.filter(d=>norm(d.propertyType)===ACTIVE_PROPERTY || (ACTIVE_PROPERTY.includes('local') && norm(d.propertyType).includes('local')));
+    filtered = filtered.filter(d=>propertyKeyFor(d.propertyType)===ACTIVE_PROPERTY);
   }
   if(q){
-    filtered = filtered.filter(d=>norm(d.name).includes(q) || norm(d.phone).includes(q));
+    filtered = filtered.filter(d=>(d.name||'').toLowerCase().includes(q) || (d.phone||'').toLowerCase().includes(q));
   }
   return filtered;
 }
